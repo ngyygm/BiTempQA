@@ -6,14 +6,14 @@ Recent years have seen a proliferation of temporal reasoning benchmarks for LLMs
 \textsc{ETRQA}~\citep{etrqa2024} consolidates event temporal reasoning datasets for reading comprehension.
 \textsc{Test of Time}~\citep{testoftime2025} generates synthetic temporal reasoning tasks.
 \textsc{MusTQ}~\citep{mustq2024} evaluates multilingual temporal KGQA across 10 languages.
-However, all treat time as a \emph{single} dimension---none systematically distinguish event occurrence time from information recording time, a distinction critical for memory systems.
+However, all treat time as a \emph{single} dimension: none systematically distinguish event occurrence time from information recording time, a distinction critical for memory systems.
 
 \subsection{Memory System Benchmarks}
 The emergence of memory-augmented LLM agents has driven benchmark development.
 LoCoMo~\citep{locomo2024} (ACL 2024) evaluates long conversational memory with 1,986 questions across 5 types, including adversarial and temporal categories.
 LongMemEval~\citep{longmemeval2024} provides 4,500 questions testing 8 memory systems on single-hop, multi-hop, and temporal reasoning.
 MemoryAgentBench~\citep{memoryagentbench2025} focuses on multi-dataset agent memory evaluation.
-While these benchmarks include temporal questions, they do not systematically test \emph{dual-timestamp} reasoning---the ability to distinguish ``when this happened'' from ``when I learned about it.''
+While these benchmarks include temporal questions, they do not systematically test \emph{dual-timestamp} reasoning, the ability to distinguish ``when this happened'' from ``when I learned about it.''
 
 \subsection{Bitemporal Data Modeling}
 The distinction between event time (valid time) and record time (transaction time) is foundational in temporal database research~\citep{snodgrass1999tsql2,jensen1999temporal}.
@@ -27,21 +27,22 @@ BiTempQA is the \emph{only} benchmark that (1) evaluates dual-timestamp reasonin
 
 \begin{table}[t]
 \centering
-\small
+\resizebox{\columnwidth}{!}{%
 \begin{tabular}{lcccccc}
 \toprule
-\textbf{Benchmark} & \textbf{Year} & \textbf{Temporal} & \textbf{Dual TS} & \textbf{Mem Eval} & \textbf{Lang} & \textbf{Scale} \\
+\textbf{Benchmark} & \textbf{Year} & \textbf{Temp.} & \textbf{Dual TS} & \textbf{Mem} & \textbf{Lang} & \textbf{Scale} \\
 \midrule
 LoCoMo & 2024 & Partial & \xmark & \cmark & EN & 1,986 \\
 LongMemEval & 2024 & \xmark & \xmark & \cmark & EN & 4,500 \\
 TimE & 2025 & \cmark & \xmark & \xmark & EN & 38,522 \\
-ETRQA & 2025 & \cmark & \xmark & \xmark & EN & Consolidated \\
+ETRQA & 2025 & \cmark & \xmark & \xmark & EN & Consol. \\
 Test of Time & 2025 & \cmark & \xmark & \xmark & EN & Novel \\
 MusTQ & 2024 & \cmark & \xmark & \xmark & Multi & 15K \\
 \midrule
-\textbf{BiTempQA} & \textbf{2026} & \cmark & \cmark & \cmark & ZH & 308 \\
+\textbf{BiTempQA} & \textbf{2026} & \cmark & \cmark & \cmark & ZH & 1,536 \\
 \bottomrule
-\end{tabular}
-\caption{Comparison with related benchmarks. \textbf{Dual TS}: explicitly evaluates dual-timestamp reasoning. \textbf{Mem Eval}: tests memory system backends (not just LLMs).}
+\end{tabular}%
+}
+\caption{Comparison with related benchmarks. \textbf{Dual TS}: evaluates dual-timestamp reasoning. \textbf{Mem}: tests memory backends (not just LLMs).}
 \label{tab:benchmark_comparison}
 \end{table}

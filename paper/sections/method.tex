@@ -1,27 +1,23 @@
 \section{BiTempQA Benchmark}
 
 \subsection{Problem Formulation}
-Following bitemporal data modeling~\citep{snodgrass1999tsql2}, we define two temporal dimensions:
-\begin{itemize}[leftmargin=*]
-\item \textbf{Event Time} ($t_e$): When an event actually occurred in the real world.
-\item \textbf{Record Time} ($t_r$): When the memory system recorded (learned about) the event.
-\end{itemize}
+Following bitemporal data modeling~\citep{snodgrass1999tsql2}, we define two temporal dimensions.
+\textbf{Event Time} ($t_e$) is when an event actually occurred in the real world.
+\textbf{Record Time} ($t_r$) is when the memory system recorded the event.
 A memory entry is a tuple $m = (\text{text}, t_e, t_r)$, and a memory store at logical time $T$ contains all entries with $t_r \leq T$. A question may require reasoning about $t_e$ only, $t_r$ only, or both simultaneously.
 
 \subsection{Scenario Design}
 We design \textbf{10 scenario types} spanning 6 domains (corporate, academic, social, fictional, historical, scientific):
-\begin{enumerate}[leftmargin=*]
-\item \textbf{Entity Attribute Evolution}: Attributes change over time (e.g., job titles).
-\item \textbf{Relationship Evolution}: Social/professional relationships change.
-\item \textbf{Contradictory Information}: Different sources report conflicting facts.
-\item \textbf{Late-Arriving Facts}: Events recorded well after they occurred ($|t_r - t_e|$ large).
-\item \textbf{Future-Dated Information}: Events recorded before their stated occurrence ($t_r < t_e$).
-\item \textbf{Entity Identity Resolution}: Same entity referenced differently across time.
-\item \textbf{Knowledge Retraction}: Previously recorded facts are later revoked.
-\item \textbf{Multi-Source Information}: Multiple independent sources report overlapping events.
-\item \textbf{Gradual Accumulation}: Knowledge builds incrementally over time.
-\item \textbf{Temporal Ambiguity}: Unclear or ambiguous temporal references.
-\end{enumerate}
+(1) Entity Attribute Evolution: attributes change over time (e.g., job titles);
+(2) Relationship Evolution: social/professional relationships change;
+(3) Contradictory Information: different sources report conflicting facts;
+(4) Late-Arriving Facts: events recorded well after they occurred ($|t_r - t_e|$ large);
+(5) Future-Dated Information: events recorded before their stated occurrence ($t_r < t_e$);
+(6) Entity Identity Resolution: same entity referenced differently across time;
+(7) Knowledge Retraction: previously recorded facts are later revoked;
+(8) Multi-Source Information: multiple independent sources report overlapping events;
+(9) Gradual Accumulation: knowledge builds incrementally over time;
+(10) Temporal Ambiguity: unclear or ambiguous temporal references.
 
 Each scenario consists of 3--5 memory writes, each annotated with explicit $t_e$ and $t_r$ ISO~8601 timestamps. Scenarios are designed so that $t_e \neq t_r$ in the majority of cases, creating natural bitemporal tension.
 
@@ -41,7 +37,7 @@ BiTempQA contains \textbf{1,536 QA pairs across 120 scenarios}, split into train
 
 \begin{table}[t]
 \centering
-\small
+\resizebox{\columnwidth}{!}{%
 \begin{tabular}{lrl}
 \toprule
 \textbf{Temporal Requirement} & \textbf{Count (\%)} & \textbf{Example Question Type} \\
@@ -53,7 +49,8 @@ Record-time only & 24 (7.8\%) & ``When was fact X first recorded?'' \\
 Version tracking needed & 78 (25.3\%) & ``What is the current value of X?'' \\
 Knowledge retraction & 28 (9.1\%) & ``Is the earlier claim about X still valid?'' \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \caption{Dual-timestamp composition of the BiTempQA test set (308 questions). Over half of questions require reasoning about both $t_e$ and $t_r$ simultaneously. Categories are not mutually exclusive.}
 \label{tab:composition}
 \end{table}
@@ -63,8 +60,8 @@ All QA pairs are generated via Qwen2.5-72B-Instruct with structured prompts, the
 \subsection{Evaluation Pipeline}
 We implement a unified \textbf{Retrieve$\to$Generate$\to$Judge} pipeline (Figure~\ref{fig:framework}):
 
-\textbf{Step 1---Retrieve}: The memory backend retrieves the top-$k$ context passages given the question and scenario memory store.
+\textbf{Step 1, Retrieve}: The memory backend retrieves the top-$k$ context passages given the question and scenario memory store.
 
-\textbf{Step 2---Generate}: DeepSeek-V3~\citep{deepseekv3} generates an answer conditioned on the retrieved context.
+\textbf{Step 2, Generate}: DeepSeek-V3~\citep{deepseekv3} generates an answer conditioned on the retrieved context.
 
-\textbf{Step 3---Judge}: An independent LLM call scores the generated answer against the gold answer. For MC questions, exact letter match is used (100\% parse rate). For abstractive and boolean questions, DeepSeek-V3 in \texttt{answer\_judge} mode evaluates semantic correctness with lenient matching. Without the LLM judge, abstractive accuracy drops to ${\sim}10\%$ (text matching too strict); with it, accuracy is ${\sim}75\%$ (fair semantic evaluation).
+\textbf{Step 3, Judge}: An independent LLM call scores the generated answer against the gold answer. For MC questions, exact letter match is used (100\% parse rate). For abstractive and boolean questions, DeepSeek-V3 in \texttt{answer\_judge} mode evaluates semantic correctness with lenient matching. Without the LLM judge, abstractive accuracy drops to ${\sim}10\%$ (text matching too strict); with it, accuracy is ${\sim}75\%$ (fair semantic evaluation).

@@ -1,4 +1,4 @@
-Memory-augmented LLM agents must track not only \emph{what} happened but \emph{when} it happened and \emph{when they learned about it}---a dual-timestamp (bitemporal) distinction critical for real-world applications such as medical records, financial systems, and news analysis.
+Memory-augmented LLM agents must track not only \emph{what} happened but \emph{when} it happened and \emph{when they learned about it}, a dual-timestamp (bitemporal) distinction critical for real-world applications such as medical records, financial systems, and news analysis.
 Existing benchmarks either ignore timestamps entirely or treat time as a single dimension, leaving a gap in evaluating this capability.
 
 We introduce \textbf{BiTempQA}, a diagnostic benchmark of 1,536 Chinese question-answer pairs (308 held-out test) across 10 scenario types and 9 question types at three difficulty levels, where each memory entry carries explicit \texttt{event\_time} (when something occurred) and \texttt{record\_time} (when the system stored it) annotations.

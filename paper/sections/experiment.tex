@@ -1,15 +1,12 @@
 \section{Experimental Setup}
 
 \subsection{Memory Backends}
-We evaluate five memory backends spanning different retrieval paradigms:
-
-\begin{itemize}[leftmargin=*]
-\item \textbf{FAISS}~\citep{johnson2019faiss}: Dense vector similarity search using SiliconFlow's multilingual embedding API, top-$k{=}5$ retrieval.
-\item \textbf{BM25}: Sparse keyword matching via rank-BM25, top-$k{=}5$ retrieval.
-\item \textbf{Naive RAG}: Sequential passage concatenation (no relevance ranking), top-$k{=}5$.
-\item \textbf{Simple Knowledge Graph}: In-memory graph with entity/relation extraction, returning connected subgraphs (5--10 facts per query).
-\item \textbf{ChromaDB}~\citep{chromadb2023}: Persistent vector database using its default embedding function (all-MiniLM-L6-v2).
-\end{itemize}
+We evaluate five memory backends spanning different retrieval paradigms.
+\textbf{FAISS}~\citep{johnson2019faiss} uses dense vector similarity search with SiliconFlow's multilingual embedding API and top-$k{=}5$ retrieval.
+\textbf{BM25} uses sparse keyword matching via rank-BM25 with top-$k{=}5$ retrieval.
+\textbf{Naive RAG} uses sequential passage concatenation (no relevance ranking), top-$k{=}5$.
+\textbf{Simple Knowledge Graph} is an in-memory graph with entity/relation extraction, returning connected subgraphs (5--10 facts per query).
+\textbf{ChromaDB}~\citep{chromadb2023} is a persistent vector database using its default embedding function (all-MiniLM-L6-v2).
 
 All systems share identical chunking, top-$k$ parameters, generation prompts, and the LLM backbone (DeepSeek-V3 via SiliconFlow API), ensuring differences reflect retrieval design choices.
 

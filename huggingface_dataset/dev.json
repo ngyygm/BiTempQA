@@ -1280,7 +1280,9 @@
       "answer_type": "multi_choice",
       "choices": [
         "张三晋升为知府",
-        "张三被贬为县丞"
+        "张三被贬为县丞",
+        "无法确定",
+        "无法确定"
       ],
       "correct_choice_index": 0,
       "ranking_order": null,
@@ -1313,7 +1315,7 @@
       "question_type": "multi_hop_temporal",
       "question_zh": "2024年1月12日15:00时，Agent对社交活动开始时间的认知是什么？",
       "question_en": "At 2024-01-12T15:00:00Z, what did the Agent believe the start time of the social event to be?",
-      "answer_zh": "2024年1月15日18:00",
+      "answer_zh": "2024-01-15T18:00:00Z",
       "answer_en": "2024-01-15T18:00:00Z",
       "answer_type": "multi_choice",
       "choices": [
@@ -1357,7 +1359,8 @@
       "choices": [
         "2024年3月2日下午3点",
         "2024年3月5日晚上8点",
-        "2024年3月7日晚上6点"
+        "2024年3月7日晚上6点",
+        "无法确定"
       ],
       "correct_choice_index": 2,
       "ranking_order": null,
@@ -2799,7 +2802,9 @@
       "answer_type": "multi_choice",
       "choices": [
         "获得科研基金支持",
-        "项目正式结题"
+        "项目正式结题",
+        "无法确定",
+        "无法确定"
       ],
       "correct_choice_index": 0,
       "ranking_order": null,

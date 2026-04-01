@@ -6,28 +6,25 @@ Table~\ref{tab:full_qtype} provides complete per-question-type accuracy across a
 
 \begin{table*}[h]
 \centering
-\small
-\begin{tabular}{lcccccc}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lccccc}
 \toprule
-\textbf{Question Type} & \textbf{Level} & \textbf{FAISS} & \textbf{BM25} & \textbf{Naive RAG} & \textbf{Simple KG} & \textbf{ChromaDB} \\
+\textbf{Question Type (Level)} & \textbf{FAISS} & \textbf{BM25} & \textbf{Naive RAG} & \textbf{Simple KG} & \textbf{ChromaDB} \\
 \midrule
-Point-in-Time & L1 & 77.8\% & \textbf{85.7\%} & 77.8\% & 63.5\% & 31.7\% \\
-Temporal Order & L1 & 89.3\% & 89.3\% & \textbf{92.9\%} & 85.7\% & 64.3\% \\
-First Recorded & L1 & 64.0\% & 64.0\% & 64.0\% & 56.0\% & 40.0\% \\
+Point-in-Time (L1) & 77.8\% & \textbf{85.7\%} & 77.8\% & 63.5\% & 31.7\% \\
+Temporal Order (L1) & 89.3\% & 89.3\% & \textbf{92.9\%} & 85.7\% & 64.3\% \\
+First Recorded (L1) & 64.0\% & 64.0\% & 64.0\% & 56.0\% & 40.0\% \\
+Period Query (L2) & 83.3\% & 80.6\% & \textbf{86.1\%} & 88.9\% & 50.0\% \\
+Change Detection (L2) & \textbf{61.3\%} & 48.4\% & 54.8\% & 38.7\% & 19.4\% \\
+Multi-hop Temporal (L2) & 76.7\% & \textbf{83.3\%} & 73.3\% & 76.7\% & 56.7\% \\
+Counterfactual (L3) & \textbf{53.8\%} & 41.0\% & 53.8\% & 46.2\% & 33.3\% \\
+Complex Temporal (L3) & \textbf{87.1\%} & 80.6\% & 83.9\% & 71.0\% & 29.0\% \\
 \midrule
-Period Query & L2 & 83.3\% & 80.6\% & \textbf{86.1\%} & 88.9\% & 50.0\% \\
-Change Detection & L2 & \textbf{61.3\%} & 48.4\% & 54.8\% & 38.7\% & 19.4\% \\
-Multi-hop Temporal & L2 & 76.7\% & \textbf{83.3\%} & 73.3\% & 76.7\% & 56.7\% \\
-\midrule
-Counterfactual & L3 & \textbf{53.8\%} & 41.0\% & 53.8\% & 46.2\% & 33.3\% \\
-Complex Temporal & L3 & \textbf{87.1\%} & 80.6\% & 83.9\% & 71.0\% & 29.0\% \\
-Version Conflict & L3 & --- & --- & --- & --- & --- \\
-\midrule
-\textbf{Average} & & 74.2\% & 71.5\% & 72.2\% & 65.8\% & 40.7\% \\
-\textbf{Range} & & \multicolumn{5}{c}{48.7\% (Counterfactual) to 92.9\% (Temporal Order): 44.2pp spread} \\
+\textbf{Average} & \textbf{74.2\%} & 71.5\% & 72.2\% & 65.8\% & 40.7\% \\
 \bottomrule
 \end{tabular}
-\caption{Complete per-question-type accuracy. Version Conflict excluded due to insufficient samples.}
+\caption{Complete per-question-type accuracy. Version Conflict excluded due to insufficient samples. Spread: 48.7\% (Counterfactual) to 92.9\% (Temporal Order).}
 \label{tab:full_qtype}
 \end{table*}
 

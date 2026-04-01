@@ -9,7 +9,7 @@ ChromaDB uses a different default embedding model (all-MiniLM-L6-v2) than the ot
 
 \begin{table}[t]
 \centering
-\small
+\resizebox{\columnwidth}{!}{%
 \begin{tabular}{lcccc}
 \toprule
 \textbf{System} & \textbf{Accuracy} & \textbf{95\% CI} & \textbf{F1} & \textbf{Ver.\ Recall} \\
@@ -20,7 +20,8 @@ BM25 & 73.4\% & [68.2, 78.2] & 0.867 & 69.2\% \\
 Simple KG & 67.2\% & [61.7, 72.4] & 0.841 & 75.6\% \\
 ChromaDB$^{\dagger}$ & 41.2\% & [35.7, 46.8] & 0.744 & 37.2\% \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \caption{Overall results on BiTempQA (308 questions). $^{\dagger}$\ ChromaDB uses a different embedding model (see \S\ref{sec:limitations}).}
 \label{tab:overall}
 \end{table}
@@ -29,11 +30,10 @@ ChromaDB$^{\dagger}$ & 41.2\% & [35.7, 46.8] & 0.744 & 37.2\% \\
 
 \begin{table}[t]
 \centering
-\small
+\resizebox{\columnwidth}{!}{%
 \begin{tabular}{lcccc}
 \toprule
-\textbf{System} & \textbf{Event-Only} & \textbf{Record-Only} & \textbf{Both Req.} & \textbf{Version Track.} \\
- & \textbf{(110Q)} & \textbf{(24Q)} & \textbf{(174Q)} & \textbf{(78Q)} \\
+\textbf{System} & \textbf{Event-Only (110Q)} & \textbf{Record-Only (24Q)} & \textbf{Both Req. (174Q)} & \textbf{Ver.\ Track. (78Q)} \\
 \midrule
 FAISS & 79.1\% & 66.7\% & \textbf{74.7\%} & \textbf{79.5\%} \\
 Naive RAG & 78.2\% & 62.5\% & 73.0\% & 74.4\% \\
@@ -43,13 +43,14 @@ ChromaDB & 44.5\% & 50.0\% & 37.9\% & 37.2\% \\
 \midrule
 \textbf{Average} & \textbf{69.1\%} & 60.8\% & 65.3\% & 67.2\% \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \caption{Accuracy by temporal requirement. Record-only questions (n=24) are hardest across all systems; the gap is suggestive given the small sample size.}
 \label{tab:temporal_breakdown}
 \end{table}
 
 Table~\ref{tab:temporal_breakdown} shows accuracy by temporal requirement.
-Record-only questions average 60.8\% vs.\ 69.1\% for event-only---an 8.3pp gap consistent across all five systems.
+Record-only questions average 60.8\% vs.\ 69.1\% for event-only, an 8.3pp gap consistent across all five systems.
 To confirm this is not a distribution artifact, we fit a mixed-effects logistic regression with scenario random intercepts, controlling for system identity, question type, difficulty level, and all temporal requirement flags.
 
 \begin{table}[t]
@@ -106,9 +107,9 @@ FAISS's dense representations appear to maintain semantic relevance even under c
 \end{figure}
 
 \subsection{System Complementarity}
-An oracle ensemble (correct if \emph{any} system answers correctly) achieves \textbf{85.4\%}---a 9.8pp gain over the best single system---confirming that memory backends have substantially non-overlapping error profiles (Figure~\ref{fig:complementarity}).
+An oracle ensemble (correct if \emph{any} system answers correctly) achieves \textbf{85.4\%}, a 9.8pp gain over the best single system, confirming that memory backends have substantially non-overlapping error profiles (Figure~\ref{fig:complementarity}).
 FAISS-ChromaDB Jaccard overlap is only 0.446 (lowest), while FAISS-SimpleKG is 0.746.
-Simple KG uniquely solves 6 items that FAISS misses, and ChromaDB uniquely solves 6---despite its low overall accuracy.
+Simple KG uniquely solves 6 items that FAISS misses, and ChromaDB uniquely solves 6, despite its low overall accuracy.
 45 items (14.6\%) are answered incorrectly by \emph{all} systems, establishing a hard irreducible ceiling.
 
 \begin{figure}[t]
@@ -125,7 +126,7 @@ This reflects a fundamental trade-off: graph structures resist adversarial hallu
 
 \begin{table}[t]
 \centering
-\small
+\resizebox{\columnwidth}{!}{%
 \begin{tabular}{lccccc}
 \toprule
 & \multicolumn{2}{c}{\textbf{BiTempQA}} & \multicolumn{3}{c}{\textbf{LoCoMo}} \\
@@ -137,7 +138,8 @@ Naive RAG & 74.0\% & 74.0\% & 54.4\% & 42.7\% & 69.7\% \\
 BM25 & 73.4\% & 73.4\% & 55.8\% & 43.8\% & 64.8\% \\
 Simple KG & 67.2\% & 67.2\% & 56.8\% & 37.5\% & \textbf{97.5\%} \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \caption{Cross-benchmark comparison. Simple KG shows extreme adversarial-temporal asymmetry.}
 \label{tab:locomo}
 \end{table}

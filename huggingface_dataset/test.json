@@ -663,7 +663,7 @@
       "question_type": "multi_hop_temporal",
       "question_zh": "2023年10月15日，Agent在发现新的证据后，伦敦世博会开幕日期是什么时候？",
       "question_en": "On October 15, 2023, after discovering new evidence, what was the opening date of the London Expo according to the Agent?",
-      "answer_zh": "1851年5月15日",
+      "answer_zh": "May 15, 1851",
       "answer_en": "May 15, 1851",
       "answer_type": "multi_choice",
       "choices": [
@@ -2506,7 +2506,7 @@
       "question_type": "point_in_time",
       "question_zh": "2024年1月10日时，Agent认为社交活动什么时候开始？",
       "question_en": "At 2024-01-10, when did the Agent believe the social event would start?",
-      "answer_zh": "2024年1月15日14:00",
+      "answer_zh": "2024-01-15T14:00:00Z",
       "answer_en": "2024-01-15T14:00:00Z",
       "answer_type": "multi_choice",
       "choices": [
@@ -3937,7 +3937,9 @@
       "answer_type": "multi_choice",
       "choices": [
         "筹备工作进展顺利",
-        "筹备工作进展不顺利"
+        "筹备工作进展不顺利",
+        "筹备工作尚未开始",
+        "筹备工作已经暂停"
       ],
       "correct_choice_index": 0,
       "ranking_order": null,
@@ -4664,7 +4666,9 @@
       "answer_type": "multi_choice",
       "choices": [
         "A. 李四发表论文",
-        "B. 张三发表撤回声明"
+        "B. 张三发表撤回声明",
+        "C. 两者同时发生",
+        "D. 无法确定先后顺序"
       ],
       "correct_choice_index": 0,
       "ranking_order": null,
@@ -4838,7 +4842,9 @@
       "answer_type": "multi_choice",
       "choices": [
         "内部报告发布",
-        "外部新闻报道"
+        "外部新闻报道",
+        "两者同时发布",
+        "无法确定哪个先发布"
       ],
       "correct_choice_index": 0,
       "ranking_order": null,
@@ -6504,7 +6510,7 @@
       "question_type": "change_detection",
       "question_zh": "张三和李四的关系什么时候正式结束朋友关系？",
       "question_en": "When did Zhang San and Li Si formally end their friendship?",
-      "answer_zh": "2023年6月30日",
+      "answer_zh": "2023-06-30",
       "answer_en": "June 30, 2023",
       "answer_type": "multi_choice",
       "choices": [
@@ -8049,7 +8055,8 @@
       "choices": [
         "内部报告提到，新药物X的研究进入临床试验阶段，初步结果显示有效。",
         "外部新闻报道，新药物X的临床试验在2024年1月15日开始，初步结果显示在治疗癌症方面有显著效果。",
-        "同事告知，新药物X的临床试验在2024年1月15日开始，但有一些副作用需要进一步观察。"
+        "同事告知，新药物X的临床试验在2024年1月15日开始，但有一些副作用需要进一步观察。",
+        "无法确定哪条记录最早"
       ],
       "correct_choice_index": 0,
       "ranking_order": null,
@@ -9096,7 +9103,7 @@
       "question_type": "multi_hop_temporal",
       "question_zh": "在张三的论文被接受时，李四做了什么？",
       "question_en": "What did Li Si do when Zhang San's paper was accepted?",
-      "answer_zh": "在学术会议上介绍了张三的研究成果",
+      "answer_zh": "介绍了张三的研究成果",
       "answer_en": "Introduced Zhang San's research at an academic conference",
       "answer_type": "multi_choice",
       "choices": [
@@ -10518,7 +10525,11 @@
       "requires_record_time_reasoning": true,
       "requires_version_tracking": true,
       "requires_knowledge_retraction": true,
-      "source_write_ids": [],
+      "source_write_ids": [
+        "w1",
+        "w2",
+        "w3"
+      ],
       "generation_method": "llm",
       "validation_status": "unvalidated",
       "validator_notes": null
@@ -10887,7 +10898,7 @@
       "question_type": "period_query",
       "question_zh": "在2024年1月1日到2024年1月20日期间，张三的职业发生了什么变化？",
       "question_en": "What changes occurred in Zhang San's occupation from January 1, 2024, to January 20, 2024?",
-      "answer_zh": "张三被选为年度最佳小说家",
+      "answer_zh": "被选为年度最佳小说家",
       "answer_en": "Zhang San was selected as the Novelist of the Year",
       "answer_type": "multi_choice",
       "choices": [
