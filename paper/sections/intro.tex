@@ -19,7 +19,7 @@ This gap means we cannot diagnose whether current memory backends fail on tempor
 
 We present \textbf{BiTempQA}, a diagnostic benchmark that fills this gap.
 BiTempQA is designed around a core insight from bitemporal data modeling: every fact has two independent temporal dimensions.
-Our benchmark contains \textbf{308 Chinese QA pairs} spanning \textbf{10 scenario types} across 6 domains (corporate, academic, social, fictional, historical, scientific), with \textbf{9 question types} at \textbf{3 difficulty levels}.
+Our benchmark contains \textbf{1,536 Chinese QA pairs (308 held-out test)} spanning \textbf{10 scenario types} across 6 domains (corporate, academic, social, fictional, historical, scientific), with \textbf{9 question types} at \textbf{3 difficulty levels}.
 Each memory write carries explicit \texttt{event\_time} and \texttt{record\_time} annotations, and 56.5\% of questions require reasoning about \emph{both} timestamps simultaneously.
 We evaluate five memory backends---FAISS, BM25, Naive RAG, Simple Knowledge Graph, and ChromaDB---through a unified Retrieve$\to$Generate$\to$Judge pipeline.
 

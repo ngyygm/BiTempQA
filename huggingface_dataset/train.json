@@ -1183,7 +1183,7 @@
       "question_type": "change_detection",
       "question_zh": "哪一天Agent发现伦敦世博会的开幕日期发生了变化？",
       "question_en": "On which day did the Agent discover a change in the opening date of the London Expo?",
-      "answer_zh": "October 15, 2023",
+      "answer_zh": "2023年10月15日",
       "answer_en": "October 15, 2023",
       "answer_type": "multi_choice",
       "choices": [
@@ -2921,7 +2921,7 @@
       "question_type": "counterfactual",
       "question_zh": "如果2023年10月15日的证据从未被记录，2023年10月16日时Agent会认为伦敦世博会的开幕日期是什么时候？",
       "question_en": "If the evidence on October 15, 2023 was never recorded, what opening date of the London Expo would the Agent believe on October 16, 2023?",
-      "answer_zh": "May 1, 1851",
+      "answer_zh": "1851年5月1日",
       "answer_en": "May 1, 1851",
       "answer_type": "multi_choice",
       "choices": [
@@ -4189,7 +4189,7 @@
       "question_type": "first_recorded",
       "question_zh": "Agent是什么时候第一次知道伦敦世博会的开幕日期？",
       "question_en": "When did the Agent first know the opening date of the London Expo?",
-      "answer_zh": "October 1, 2023",
+      "answer_zh": "2023年10月1日",
       "answer_en": "October 1, 2023",
       "answer_type": "multi_choice",
       "choices": [
@@ -5941,8 +5941,7 @@
       "choices": [
         "2024年3月15日",
         "2024年3月20日",
-        "不确定",
-        "无法确定"
+        "不确定"
       ],
       "correct_choice_index": 1,
       "ranking_order": null,
@@ -6269,9 +6268,7 @@
       "answer_type": "multi_choice",
       "choices": [
         "北京",
-        "上海",
-        "无法确定",
-        "无法确定"
+        "上海"
       ],
       "correct_choice_index": 0,
       "ranking_order": null,
@@ -6695,9 +6692,7 @@
       "answer_type": "multi_choice",
       "choices": [
         "农民",
-        "商人",
-        "无法确定",
-        "无法确定"
+        "商人"
       ],
       "correct_choice_index": 1,
       "ranking_order": null,
@@ -8069,7 +8064,7 @@
       "question_type": "first_recorded",
       "question_zh": "Agent第一次知道社交活动的开始时间是什么时候？",
       "question_en": "When did the Agent first learn about the start time of the social event?",
-      "answer_zh": "2024-01-10T10:00:00Z",
+      "answer_zh": "2024年1月10日10:00",
       "answer_en": "2024-01-10T10:00:00Z",
       "answer_type": "multi_choice",
       "choices": [
@@ -9761,7 +9756,7 @@
       "question_type": "point_in_time",
       "question_zh": "2024年1月12日，Agent知道张三的聚会时间是什么时候？",
       "question_en": "On January 12, 2024, what time did the Agent know Zhang San's gathering would start?",
-      "answer_zh": "18:00 on January 16, 2024",
+      "answer_zh": "1月16日18:00",
       "answer_en": "18:00 on January 16, 2024",
       "answer_type": "multi_choice",
       "choices": [
@@ -9939,7 +9934,7 @@
       "question_type": "counterfactual",
       "question_zh": "如果李四在2024年1月12日15:00之前没有更改社交活动的时间，Agent在2024年1月15日14:00时会认为活动什么时候开始？",
       "question_en": "If Li Si had not changed the time of the social event before 2024-01-12T15:00:00Z, what would the Agent have believed the start time to be at 2024-01-15T14:00:00Z?",
-      "answer_zh": "2024-01-15T14:00:00Z",
+      "answer_zh": "2024年1月15日14:00",
       "answer_en": "2024-01-15T14:00:00Z",
       "answer_type": "multi_choice",
       "choices": [
@@ -10552,9 +10547,7 @@
       "answer_type": "multi_choice",
       "choices": [
         "重要实验时间",
-        "进一步验证时间",
-        "无法确定",
-        "无法确定"
+        "进一步验证时间"
       ],
       "correct_choice_index": 0,
       "ranking_order": null,
@@ -14874,7 +14867,7 @@
       "question_type": "counterfactual",
       "question_zh": "如果2024年1月12日之前没有记录聚会时间更改的信息，Agent在2024年1月14日会认为张三的聚会时间是什么时候？",
       "question_en": "If the information about the change in Zhang San's gathering time was not recorded before January 12, 2024, what time would the Agent think the gathering would start on January 14, 2024?",
-      "answer_zh": "14:00 on January 15, 2024",
+      "answer_zh": "1月15日14:00",
       "answer_en": "14:00 on January 15, 2024",
       "answer_type": "multi_choice",
       "choices": [
@@ -15274,9 +15267,7 @@
       "answer_type": "multi_choice",
       "choices": [
         "1. 张三教授计划会议",
-        "2. 李四教授介绍研究",
-        "无法确定",
-        "无法确定"
+        "2. 李四教授介绍研究"
       ],
       "correct_choice_index": 0,
       "ranking_order": null,
@@ -16721,7 +16712,7 @@
       "question_type": "temporal_ordering",
       "question_zh": "2023年10月1日和10月15日，哪个日期Agent记录了伦敦世博会的开幕日期？",
       "question_en": "Which date did the Agent record the opening date of the London Expo: October 1 or October 15, 2023?",
-      "answer_zh": "October 1, 2023",
+      "answer_zh": "2023年10月1日",
       "answer_en": "October 1, 2023",
       "answer_type": "multi_choice",
       "choices": [
@@ -17265,7 +17256,7 @@
       "question_type": "point_in_time",
       "question_zh": "2023年10月1日时，Agent认为伦敦世博会开幕日期是什么时候？",
       "question_en": "As of October 1, 2023, what date did the Agent believe the London Expo opened?",
-      "answer_zh": "May 1, 1851",
+      "answer_zh": "1851年5月1日",
       "answer_en": "May 1, 1851",
       "answer_type": "multi_choice",
       "choices": [
@@ -17412,7 +17403,7 @@
       "question_type": "multi_hop_temporal",
       "question_zh": "在2024年1月15日，角色更名后立即发生了什么事件？",
       "question_en": "What event immediately occurred after the character was renamed on January 15, 2024?",
-      "answer_zh": "角色获得神剑",
+      "answer_zh": "角色获得了一把神剑",
       "answer_en": "The character received a divine sword",
       "answer_type": "multi_choice",
       "choices": [
@@ -18195,9 +18186,7 @@
       "requires_record_time_reasoning": true,
       "requires_version_tracking": true,
       "requires_knowledge_retraction": true,
-      "source_write_ids": [
-        "w1"
-      ],
+      "source_write_ids": [],
       "generation_method": "llm",
       "validation_status": "unvalidated",
       "validator_notes": null
@@ -18538,7 +18527,7 @@
       "question_type": "change_detection",
       "question_zh": "伦敦世博会的开幕日期什么时候发生了变化？",
       "question_en": "When did the opening date of the London Expo change?",
-      "answer_zh": "October 15, 2023",
+      "answer_zh": "2023年10月15日",
       "answer_en": "October 15, 2023",
       "answer_type": "multi_choice",
       "choices": [
@@ -19207,7 +19196,7 @@
       "question_type": "change_detection",
       "question_zh": "社交活动的开始时间是什么时候从14:00变为18:00的？",
       "question_en": "When did the start time of the social event change from 14:00 to 18:00?",
-      "answer_zh": "2024-01-12T15:00:00Z",
+      "answer_zh": "2024年1月12日15:00",
       "answer_en": "2024-01-12T15:00:00Z",
       "answer_type": "multi_choice",
       "choices": [
@@ -25850,7 +25839,7 @@
       "question_type": "change_detection",
       "question_zh": "项目预计完成时间从2024年变为2024年底是在哪个时间点发生的？",
       "question_en": "When did the project's estimated completion time change from 2024 to the end of 2024?",
-      "answer_zh": "2024-01-15T12:00:00Z",
+      "answer_zh": "2024年1月15日下午12点",
       "answer_en": "2024-01-15T12:00:00Z",
       "answer_type": "multi_choice",
       "choices": [
@@ -28505,7 +28494,7 @@
       "question_type": "point_in_time",
       "question_zh": "2023年10月2日时，Agent认为伦敦世博会开幕日期是什么时候？",
       "question_en": "As of October 2, 2023, what date did the Agent believe the London Expo opened?",
-      "answer_zh": "May 1, 1851",
+      "answer_zh": "1851年5月1日",
       "answer_en": "May 1, 1851",
       "answer_type": "multi_choice",
       "choices": [
@@ -29010,7 +28999,7 @@
       "question_type": "temporal_ordering",
       "question_zh": "以下事件按照时间顺序排列是什么？1）张三的论文被接受；2）李四介绍了张三的研究；3）张三的论文接受被撤回。",
       "question_en": "What is the chronological order of the following events? 1) Zhang San's paper was accepted; 2) Li Si introduced Zhang San's research; 3) The acceptance of Zhang San's paper was retracted.",
-      "answer_zh": "1, 2, 3",
+      "answer_zh": "1）张三的论文被接受；2）李四介绍了张三的研究；3）张三的论文接受被撤回。",
       "answer_en": "1) Zhang San's paper was accepted; 2) Li Si introduced Zhang San's research; 3) The acceptance of Zhang San's paper was retracted.",
       "answer_type": "multi_choice",
       "choices": [
@@ -30457,7 +30446,7 @@
       "question_type": "multi_hop_temporal",
       "question_zh": "在张三和李四成为好朋友时，还有哪些朋友状态的信息？",
       "question_en": "What other friendship status information was known when Zhang San and Li Si became good friends?",
-      "answer_zh": "张三和王五的友谊结束",
+      "answer_zh": "张三和王五的友谊已经结束。",
       "answer_en": "The friendship between Zhang San and Wang Wu had already ended.",
       "answer_type": "multi_choice",
       "choices": [
@@ -32013,7 +32002,7 @@
       "question_type": "temporal_ordering",
       "question_zh": "以下事件哪个先发生：记录伦敦世博会开幕日期，还是推断世博会对工业革命的影响？",
       "question_en": "Which event occurred first: recording the opening date of the London Expo, or inferring its impact on the industrial revolution?",
-      "answer_zh": "Recording the opening date of the London Expo",
+      "answer_zh": "记录伦敦世博会开幕日期",
       "answer_en": "Recording the opening date of the London Expo",
       "answer_type": "multi_choice",
       "choices": [
@@ -33515,9 +33504,7 @@
       "answer_type": "multi_choice",
       "choices": [
         "古墓的发现时间",
-        "古墓的地点被记录下来的时间",
-        "无法确定",
-        "无法确定"
+        "古墓的地点被记录下来的时间"
       ],
       "correct_choice_index": 0,
       "ranking_order": null,
@@ -33588,7 +33575,7 @@
       "question_type": "temporal_ordering",
       "question_zh": "以下事件按照时间顺序排列是什么？1）李四在学术会议上介绍张三的研究；2）张三的论文被接受；3）张三的论文接受被撤回。",
       "question_en": "What is the chronological order of the following events? 1) Li Si introduced Zhang San's research at an academic conference; 2) Zhang San's paper was accepted; 3) The acceptance of Zhang San's paper was retracted.",
-      "answer_zh": "2, 1, 3",
+      "answer_zh": "2）张三的论文被接受；1）李四在学术会议上介绍张三的研究；3）张三的论文接受被撤回。",
       "answer_en": "2) Zhang San's paper was accepted; 1) Li Si introduced Zhang San's research at an academic conference; 3) The acceptance of Zhang San's paper was retracted.",
       "answer_type": "multi_choice",
       "choices": [
@@ -33918,9 +33905,7 @@
       "answer_type": "multi_choice",
       "choices": [
         "古墓的发现信息",
-        "出土文物的详细信息",
-        "无法确定",
-        "无法确定"
+        "出土文物的详细信息"
       ],
       "correct_choice_index": 0,
       "ranking_order": null,
@@ -34057,7 +34042,7 @@
       "question_type": "change_detection",
       "question_zh": "张三和李四的关系什么时候开始恶化？",
       "question_en": "When did the relationship between Zhang San and Li Si start to deteriorate?",
-      "answer_zh": "2023-03-15",
+      "answer_zh": "2023年3月15日",
       "answer_en": "March 15, 2023",
       "answer_type": "multi_choice",
       "choices": [
@@ -34390,9 +34375,7 @@
       "answer_type": "multi_choice",
       "choices": [
         "A. 李四引用张三的研究成果",
-        "B. 张三发布撤回声明",
-        "无法确定",
-        "无法确定"
+        "B. 张三发布撤回声明"
       ],
       "correct_choice_index": 0,
       "ranking_order": null,
@@ -37011,7 +36994,7 @@
       "question_type": "multi_hop_temporal",
       "question_zh": "在2024年1月12日，Agent知道李四提到的张三聚会时间是什么时候？",
       "question_en": "On January 12, 2024, what time did the Agent know that Li Si mentioned for Zhang San's gathering?",
-      "answer_zh": "18:00 on January 16, 2024",
+      "answer_zh": "1月16日18:00",
       "answer_en": "18:00 on January 16, 2024",
       "answer_type": "multi_choice",
       "choices": [
@@ -37298,9 +37281,7 @@
       "answer_type": "multi_choice",
       "choices": [
         "小明在微信上确认聚会时间和地点",
-        "小红告诉我她也收到了小明聚会的邀请",
-        "无法确定",
-        "无法确定"
+        "小红告诉我她也收到了小明聚会的邀请"
       ],
       "correct_choice_index": 0,
       "ranking_order": null,
@@ -37755,9 +37736,7 @@
       "requires_record_time_reasoning": false,
       "requires_version_tracking": false,
       "requires_knowledge_retraction": false,
-      "source_write_ids": [
-        "w1"
-      ],
+      "source_write_ids": [],
       "generation_method": "llm",
       "validation_status": "unvalidated",
       "validator_notes": null

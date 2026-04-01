@@ -23,7 +23,7 @@ We design \textbf{10 scenario types} spanning 6 domains (corporate, academic, so
 \item \textbf{Temporal Ambiguity}: Unclear or ambiguous temporal references.
 \end{enumerate}
 
-Each scenario consists of 3--10 memory writes, each annotated with explicit $t_e$ and $t_r$ ISO~8601 timestamps. Scenarios are designed so that $t_e \neq t_r$ in the majority of cases, creating natural bitemporal tension.
+Each scenario consists of 3--5 memory writes, each annotated with explicit $t_e$ and $t_r$ ISO~8601 timestamps. Scenarios are designed so that $t_e \neq t_r$ in the majority of cases, creating natural bitemporal tension.
 
 \subsection{Question Taxonomy}
 Questions are organized into \textbf{9 types} at \textbf{3 difficulty levels}:
@@ -37,7 +37,7 @@ Questions are organized into \textbf{9 types} at \textbf{3 difficulty levels}:
 Questions use three answer formats: multiple choice (4 options, 43.8\%), abstractive (free text, 53.0\%), and boolean (3.2\%). Every question is annotated with metadata flags: \texttt{requires\_event\_time}, \texttt{requires\_record\_time}, \texttt{requires\_version\_tracking}, and \texttt{requires\_knowledge\_retraction}.
 
 \subsection{Dataset Statistics}
-BiTempQA contains \textbf{308 QA pairs} across 112 scenarios. Table~\ref{tab:composition} shows the dual-timestamp composition.
+BiTempQA contains \textbf{1,536 QA pairs across 120 scenarios}, split into train (1,075), dev (153), and test (308). All reported results use the held-out test set (308 pairs across 112 scenarios; 8 scenarios are held exclusively for train/dev). Table~\ref{tab:composition} shows the dual-timestamp composition of the test set.
 
 \begin{table}[t]
 \centering
@@ -54,7 +54,7 @@ Version tracking needed & 78 (25.3\%) & ``What is the current value of X?'' \\
 Knowledge retraction & 28 (9.1\%) & ``Is the earlier claim about X still valid?'' \\
 \bottomrule
 \end{tabular}
-\caption{Dual-timestamp composition of BiTempQA. Over half of questions require reasoning about both $t_e$ and $t_r$ simultaneously. Categories are not mutually exclusive.}
+\caption{Dual-timestamp composition of the BiTempQA test set (308 questions). Over half of questions require reasoning about both $t_e$ and $t_r$ simultaneously. Categories are not mutually exclusive.}
 \label{tab:composition}
 \end{table}
 
