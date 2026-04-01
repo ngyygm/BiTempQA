@@ -1,0 +1,110 @@
+# BiTempQA + EvolBench 评估配置 (v2)
+
+# 评估模式: "unified" (retrieve->LLM generate->judge) 或 "legacy" (direct answer)
+eval_mode: "unified"
+
+# 被评估系统
+systems:
+  tmg:
+    name: "TMG (ours)"
+    type: "tmg"
+    api_base: "http://localhost:8732"
+    enabled: false
+  faiss:
+    name: "FAISS Vector Store"
+    type: "faiss"
+    embedding_model: "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+    enabled: true
+  chroma:
+    name: "ChromaDB"
+    type: "chroma"
+    embedding_model: "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+    enabled: true
+  simple_kg:
+    name: "Simple KG"
+    type: "simple_kg"
+    enabled: true
+  naive_rag:
+    name: "Naive RAG"
+    type: "naive_rag"
+    embedding_model: "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+    enabled: true
+  bm25:
+    name: "BM25"
+    type: "bm25"
+    enabled: true
+  mem0:
+    name: "Mem0"
+    type: "mem0"
+    enabled: false
+    # Mem0 使用 SiliconFlow API 作为 LLM 后端
+    llm_model: "deepseek-ai/DeepSeek-V3"
+    llm_base_url: "https://api.siliconflow.cn/v1"
+    llm_api_key: "sk-xjakkyzbynwbvxvetpspqwnsrzfqblgkhkrfrrdmcgtqmwwz"
+  graphiti:
+    name: "Graphiti"
+    type: "graphiti"
+    enabled: false
+    neo4j_uri: "bolt://localhost:7687"
+    neo4j_user: "neo4j"
+    neo4j_password: "password"
+
+# Answer Generator 配置（用于 unified 模式）
+answer_generator:
+  base_url: "https://api.siliconflow.cn/v1"
+  api_key: "sk-xjakkyzbynwbvxvetpspqwnsrzfqblgkhkrfrrdmcgtqmwwz"
+  model: "deepseek-ai/DeepSeek-V3"
+  temperature: 0.0
+
+# LLM Judge 配置
+llm_judge:
+  mode: "answer_judge"  # "answer_judge" (对比生成答案) 或 "context_judge" (对比检索上下文)
+  base_url: "https://api.siliconflow.cn/v1"
+  api_key: "sk-xjakkyzbynwbvxvetpspqwnsrzfqblgkhkrfrrdmcgtqmwwz"
+  model: "deepseek-ai/DeepSeek-V3"
+  temperature: 0.0
+  max_workers: 3
+  timeout: 60
+
+# 评估参数
+evaluation:
+  reset_between_scenarios: true
+  query_timeout: 30000
+  max_concurrent_queries: 1
+  verbose_logging: true
+  output_dir: "data/eval_results"
+
+# 指标配置
+metrics:
+  primary: "accuracy"
+  secondary:
+    - "f1_score"
+    - "temporal_reasoning_accuracy"
+    - "version_recall"
+  breakdowns:
+    - "difficulty_level"
+    - "question_type"
+    - "scenario_type"
+    - "requires_event_time_reasoning"
+    - "requires_record_time_reasoning"
+
+# 数据集配置
+dataset:
+  test_path: "data/validated/bitpqa_test_zh.json"
+  language: "zh"
+
+# LoCoMo benchmark 配置
+locomo:
+  hf_repo: "Percena/locomo-mc10"
+  enabled: true
+
+# 小说 benchmark 配置
+novel_benchmark:
+  books_dir: "/home/linkco/exa/llm-usefulEeb/书籍"
+  novels:
+    - "活着.txt"
+    - "三体1疯狂年代.txt"
+    - "文化苦旅.txt"
+  questions_per_chapter: 10
+  max_questions_per_novel: 80
+  enabled: true

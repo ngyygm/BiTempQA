@@ -1,0 +1,59 @@
+\section{Appendix}
+
+\subsection{Full Per-Question-Type Results}
+
+Table~\ref{tab:full_qtype} provides complete per-question-type accuracy across all systems and types.
+
+\begin{table*}[h]
+\centering
+\small
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{Question Type} & \textbf{Level} & \textbf{FAISS} & \textbf{BM25} & \textbf{Naive RAG} & \textbf{Simple KG} & \textbf{ChromaDB} \\
+\midrule
+Point-in-Time & L1 & 77.8\% & \textbf{85.7\%} & 77.8\% & 63.5\% & 31.7\% \\
+Temporal Order & L1 & 89.3\% & 89.3\% & \textbf{92.9\%} & 85.7\% & 64.3\% \\
+First Recorded & L1 & 64.0\% & 64.0\% & 64.0\% & 56.0\% & 40.0\% \\
+\midrule
+Period Query & L2 & 83.3\% & 80.6\% & \textbf{86.1\%} & 88.9\% & 50.0\% \\
+Change Detection & L2 & \textbf{61.3\%} & 48.4\% & 54.8\% & 38.7\% & 19.4\% \\
+Multi-hop Temporal & L2 & 76.7\% & \textbf{83.3\%} & 73.3\% & 76.7\% & 56.7\% \\
+\midrule
+Counterfactual & L3 & \textbf{53.8\%} & 41.0\% & 53.8\% & 46.2\% & 33.3\% \\
+Complex Temporal & L3 & \textbf{87.1\%} & 80.6\% & 83.9\% & 71.0\% & 29.0\% \\
+Version Conflict & L3 & --- & --- & --- & --- & --- \\
+\midrule
+\textbf{Average} & & 74.2\% & 71.5\% & 72.2\% & 65.8\% & 40.7\% \\
+\textbf{Range} & & \multicolumn{5}{c}{48.7\% (Counterfactual) to 92.9\% (Temporal Order): 44.2pp spread} \\
+\bottomrule
+\end{tabular}
+\caption{Complete per-question-type accuracy. Version Conflict excluded due to insufficient samples.}
+\label{tab:full_qtype}
+\end{table*}
+
+\subsection{LLM Judge Cross-Validation Details}
+
+We cross-validated DeepSeek-V3 against Qwen2.5-72B-Instruct on 50 abstractive QA pairs from the FAISS system (random sample, seed=42).
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lc}
+\toprule
+\textbf{Metric} & \textbf{Value} \\
+\midrule
+Agreement rate & 76.0\% (38/50) \\
+Cohen's $\kappa$ & 0.455 (moderate) \\
+DeepSeek-V3 judged correct & 80.0\% (40/50) \\
+Qwen2.5-72B judged correct & 60.0\% (30/50) \\
+\midrule
+\multicolumn{2}{l}{\textit{Disagreement breakdown (12 items)}} \\
+\quad DeepSeek lenient & 11/12 (91.7\%) \\
+\quad Qwen lenient & 1/12 (8.3\%) \\
+\quad Pattern: partial answer & 6/12 \\
+\quad Pattern: answer too short & 6/12 \\
+\bottomrule
+\end{tabular}
+\caption{LLM Judge cross-validation. DeepSeek-V3 is systematically more lenient, accepting partial answers that Qwen rejects.}
+\label{tab:judge_detail}
+\end{table}

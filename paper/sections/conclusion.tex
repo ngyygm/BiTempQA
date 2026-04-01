@@ -1,0 +1,14 @@
+\section{Conclusion}
+
+We presented BiTempQA, the first diagnostic benchmark explicitly designed to evaluate bitemporal reasoning---reasoning about \emph{when events occurred} vs.\ \emph{when the system learned about them}---in LLM agent memory systems.
+Our evaluation of five memory backends reveals three key findings:
+
+\begin{enumerate}[leftmargin=*]
+\item \textbf{Record-time reasoning is genuinely harder} than event-time reasoning ($p{=}0.023$), confirming that the dual-timestamp distinction captures a real cognitive challenge.
+\item \textbf{Retrieval, not reasoning, is the primary bottleneck} (${\sim}55\%$ of failures), suggesting that temporal-aware retrieval mechanisms would yield the largest improvements.
+\item \textbf{Memory backends are highly complementary}: an oracle ensemble achieves 85.4\% (+9.8pp), and graph-based memory offers unique adversarial robustness (97.5\%) despite lower temporal accuracy.
+\end{enumerate}
+
+These findings provide actionable guidance for building temporally-aware memory systems: invest in bitemporal indexing, combine vector breadth with graph precision, and use external verification rather than internal confidence.
+
+Future work includes: human expert validation, English translation, evaluation of production memory systems (Mem0, Graphiti, TMG), and expansion to longer scenarios with richer temporal dynamics.

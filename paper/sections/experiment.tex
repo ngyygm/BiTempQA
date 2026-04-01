@@ -1,0 +1,20 @@
+\section{Experimental Setup}
+
+\subsection{Memory Backends}
+We evaluate five memory backends spanning different retrieval paradigms:
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{FAISS}~\citep{johnson2019faiss}: Dense vector similarity search using SiliconFlow's multilingual embedding API, top-$k{=}5$ retrieval.
+\item \textbf{BM25}: Sparse keyword matching via rank-BM25, top-$k{=}5$ retrieval.
+\item \textbf{Naive RAG}: Sequential passage concatenation (no relevance ranking), top-$k{=}5$.
+\item \textbf{Simple Knowledge Graph}: In-memory graph with entity/relation extraction, returning connected subgraphs (5--10 facts per query).
+\item \textbf{ChromaDB}~\citep{chromadb2023}: Persistent vector database using its default embedding function (all-MiniLM-L6-v2).
+\end{itemize}
+
+All systems share identical chunking, top-$k$ parameters, generation prompts, and the LLM backbone (DeepSeek-V3 via SiliconFlow API), ensuring differences reflect retrieval design choices.
+
+\subsection{Cross-Benchmark Evaluation}
+We additionally evaluate all backends (except ChromaDB) on the LoCoMo benchmark~\citep{locomo2024}, which contains 1,986 MC questions across 10 long conversations (300--700 turns each). This enables cross-benchmark analysis of system behavior under different conditions: BiTempQA's short, dual-timestamp scenarios vs.\ LoCoMo's long, single-timestamp conversations.
+
+\subsection{Statistical Methods}
+We employ: (1) Bootstrap 95\% confidence intervals (10,000 iterations); (2) McNemar's test with continuity correction for pairwise system comparisons; (3) Mixed-effects logistic regression with scenario random intercepts to control for question type, difficulty, and temporal requirements; (4) LLM Judge cross-validation (DeepSeek-V3 vs.\ Qwen2.5-72B, Cohen's $\kappa{=}0.455$).

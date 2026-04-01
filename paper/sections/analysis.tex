@@ -1,0 +1,66 @@
+\section{Diagnostic Analysis}
+
+\subsection{Retrieval Is the Bottleneck}
+We sampled 20 FAISS failures (best system) and classified them by retrieval context length.
+All 20 had short or empty retrieval context ($<$200 characters), compared to ${\sim}500$ chars average for correct answers.
+Heuristic classification estimates ${\sim}55\%$ retrieval failure vs.\ ${\sim}45\%$ reasoning failure, suggesting that improving retrieval quality---particularly temporal-aware retrieval---would yield larger gains than improving reasoning capability.
+
+\subsection{Confidence Is Anti-Calibrated}
+A striking diagnostic finding: vector-based systems produce \emph{anti-calibrated} confidence scores.
+Table~\ref{tab:calibration} shows Expected Calibration Error (ECE), Brier score, and AUROC for each system.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lccc}
+\toprule
+\textbf{System} & \textbf{ECE}$\downarrow$ & \textbf{Brier}$\downarrow$ & \textbf{AUROC} \\
+\midrule
+FAISS & 0.163 & 0.229 & 0.453 \\
+Naive RAG & 0.319 & 0.303 & 0.552 \\
+BM25 & 0.235 & 0.769 & 0.467 \\
+Simple KG & 0.672 & 0.672 & 0.500 \\
+ChromaDB & 0.412 & 0.412 & 0.500 \\
+\bottomrule
+\end{tabular}
+\caption{Confidence calibration metrics. FAISS and BM25 show AUROC${}<0.5$---wrong answers receive \emph{higher} confidence than correct ones.}
+\label{tab:calibration}
+\end{table}
+
+FAISS's AUROC of 0.453 means confidence scores are \emph{worse than random} at predicting correctness: wrong answers receive higher confidence than correct ones.
+This has practical implications: agents cannot rely on internal confidence to decide whether to trust a temporal memory answer or seek verification.
+
+\subsection{Knowledge Retraction vs.\ Version Tracking}
+We decompose performance on questions involving knowledge dynamics (Table~\ref{tab:retraction}).
+Simple KG shows an asymmetric profile: strong at version tracking (81.0\%, close to FAISS's 82.8\%) but weak at knowledge retraction (53.6\%).
+This suggests graph structures naturally support tracking fact evolution but struggle with explicitly revoking superseded knowledge---a distinction with implications for memory architecture design.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lccc}
+\toprule
+\textbf{System} & \textbf{Retraction (28Q)} & \textbf{Version Track. (58Q)} & \textbf{Neither (222Q)} \\
+\midrule
+FAISS & 67.9\% & \textbf{82.8\%} & 74.8\% \\
+Naive RAG & 67.9\% & 75.9\% & 74.3\% \\
+BM25 & 57.1\% & 74.1\% & \textbf{75.2\%} \\
+Simple KG & 53.6\% & 81.0\% & 65.3\% \\
+ChromaDB & 39.3\% & 37.9\% & 42.3\% \\
+\bottomrule
+\end{tabular}
+\caption{Accuracy by knowledge dynamics type. Simple KG: strong version tracking but weak retraction. Bootstrap CIs for retraction span 35pp due to small n=28.}
+\label{tab:retraction}
+\end{table}
+
+\subsection{Implications for Memory System Design}
+Our findings suggest three design recommendations:
+
+\paragraph{1. Temporal-aware retrieval.}
+Since ${\sim}55\%$ of failures are retrieval-limited, adding temporal metadata filtering (e.g., ``retrieve only facts recorded before $T$'') or bitemporal indexing would likely yield larger gains than improving the reasoning model.
+
+\paragraph{2. Hybrid vector+graph architectures.}
+The complementarity between systems (oracle +9.8pp) and Simple KG's unique adversarial robustness suggest combining dense retrieval's breadth with graph structure's precision would outperform either alone.
+
+\paragraph{3. External verification for temporal claims.}
+Anti-calibrated confidence means internal signals cannot identify uncertain temporal answers. External verification (e.g., cross-checking against source timestamps) should be triggered for all bitemporal queries.

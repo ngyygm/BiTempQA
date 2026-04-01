@@ -1,0 +1,10 @@
+Memory-augmented LLM agents must track not only \emph{what} happened but \emph{when} it happened and \emph{when they learned about it}---a dual-timestamp (bitemporal) distinction critical for real-world applications such as medical records, financial systems, and news analysis.
+Existing benchmarks either ignore timestamps entirely or treat time as a single dimension, leaving a gap in evaluating this capability.
+
+We introduce \textbf{BiTempQA}, a diagnostic benchmark of 308 Chinese question-answer pairs across 10 scenario types and 9 question types at three difficulty levels, where each memory entry carries explicit \texttt{event\_time} (when something occurred) and \texttt{record\_time} (when the system stored it) annotations.
+Over half (56.5\%) of questions require reasoning about both timestamps simultaneously.
+We evaluate five memory backends (FAISS, BM25, Naive RAG, Simple KG, ChromaDB) through a unified Retrieve$\to$LLM Generate$\to$LLM Judge pipeline.
+A mixed-effects logistic regression confirms that record-time reasoning is genuinely harder than event-time reasoning ($p{=}0.023$), surviving controls for question type, difficulty, and scenario variation.
+We further find that: (1) the top three systems are statistically tied overall ($p{>}0.3$) but diverge on specific question types (40.6pp accuracy spread); (2) an oracle ensemble of all systems achieves 85.4\% (+9.8pp over any single system); (3) approximately 55\% of failures stem from retrieval limitations rather than reasoning errors; and (4) system confidence scores are \emph{anti-calibrated} (AUROC${}<0.5$), predicting failure better than success.
+Cross-validation with the LoCoMo benchmark reveals striking system asymmetries: Simple KG dominates adversarial questions (97.5\%) but trails on temporal reasoning (37.5\%).
+BiTempQA is released as an open diagnostic tool for developing temporally-aware memory systems.

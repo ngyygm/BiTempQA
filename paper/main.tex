@@ -1,0 +1,60 @@
+\documentclass[11pt]{article}
+
+% ACL style
+\usepackage{acl}
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{natbib}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{subcaption}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    urlcolor=blue
+}
+
+\newcommand{\eventmark}{\textcolor{blue}{\textbf{event\_time}}}
+\newcommand{\recordmark}{\textcolor{red}{\textbf{record\_time}}}
+
+\title{BiTempQA: A Diagnostic Benchmark for Bitemporal Reasoning\\in LLM Agent Memory Systems}
+
+\author{
+  Anonymous
+}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+\input{sections/abstract}
+\end{abstract}
+
+\input{sections/intro}
+\input{sections/related}
+\input{sections/method}
+\input{sections/experiment}
+\input{sections/results}
+\input{sections/analysis}
+\input{sections/limitations}
+\input{sections/conclusion}
+
+\bibliography{references}
+\bibliographystyle{acl_natbib}
+
+\appendix
+\input{sections/appendix}
+
+\end{document}
