@@ -8,7 +8,7 @@
 [![Dataset](https://img.shields.io/badge/HuggingFace-Dataset-yellow)](https://huggingface.co/datasets/heihei/BiTempQA)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-**308 Chinese QA pairs | 10 scenario types | 9 question types | 5 memory backends**
+**1,536 Chinese QA pairs (308 test) | 10 scenario types | 9 question types | 5 memory backends**
 
 </div>
 
@@ -44,7 +44,16 @@ Memory-augmented LLM agents must track not only **what** happened but **when** i
 
 The dataset is available on HuggingFace: **[heihei/BiTempQA](https://huggingface.co/datasets/heihei/BiTempQA)**
 
-### Dual-Timestamp Composition
+### Dataset Splits
+
+| Split | Scenarios | QA Pairs |
+|-------|-----------|----------|
+| Train | 120 | 1,075 |
+| Dev | 87 | 153 |
+| Test (held-out) | 112 | 308 |
+| **Total** | **120** | **1,536** |
+
+### Dual-Timestamp Composition (Test Set)
 
 | Temporal Requirement | Count | Example |
 |---------------------|-------|---------|
@@ -69,7 +78,7 @@ The dataset is available on HuggingFace: **[heihei/BiTempQA](https://huggingface
 
 ## Main Results
 
-### Overall Performance
+### Overall Performance (Test Set, n=308)
 
 | System | Accuracy | F1 | 95% CI |
 |--------|----------|-----|--------|
