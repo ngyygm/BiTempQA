@@ -22,7 +22,6 @@ build/
 *.synctex.gz
 
 # Data (large files - use HuggingFace)
-benchmark/data/generated/
 benchmark/data/eval_results/eval_*.json
 benchmark/data/eval_results/pilot/
 benchmark/data/eval_results/locomo/
