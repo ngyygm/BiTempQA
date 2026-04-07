@@ -2,16 +2,20 @@
 
 \subsection{Memory Backends}
 We evaluate five memory backends spanning different retrieval paradigms.
-\textbf{FAISS}~\citep{johnson2019faiss} uses dense vector similarity search with SiliconFlow's multilingual embedding API and top-$k{=}5$ retrieval.
-\textbf{BM25} uses sparse keyword matching via rank-BM25 with top-$k{=}5$ retrieval.
-\textbf{Naive RAG} uses sequential passage concatenation (no relevance ranking), top-$k{=}5$.
-\textbf{Simple Knowledge Graph} is an in-memory graph with entity/relation extraction, returning connected subgraphs (5--10 facts per query).
-\textbf{ChromaDB}~\citep{chromadb2023} is a persistent vector database using its default embedding function (all-MiniLM-L6-v2).
+% 中文注释：baseline 名称在正文中改为普通罗马体，避免重复粗体强调。
+FAISS~\citep{johnson2019faiss} uses dense vector similarity search with SiliconFlow's multilingual embedding API and top-$k = 5$ retrieval.
+BM25 uses sparse keyword matching via rank-BM25 with top-$k = 5$ retrieval.
+% 中文注释：这里继续只调整字体与数学间距，不改变 baseline 的实验设定。
+Naive RAG uses sequential passage concatenation (no relevance ranking) with top-$k = 5$.
+Simple Knowledge Graph is an in-memory graph with entity/relation extraction, returning connected subgraphs (5--10 facts per query).
+ChromaDB~\citep{chromadb2023} is a persistent vector database that uses its default embedding function (all-MiniLM-L6-v2).
 
-All systems share identical chunking, top-$k$ parameters, generation prompts, and the LLM backbone (DeepSeek-V3 via SiliconFlow API), ensuring differences reflect retrieval design choices.
+All systems share identical chunking, top-$k$ parameters, generation prompts, and the same LLM backbone (DeepSeek-V3 via the SiliconFlow API), so observed differences are more plausibly attributable to retrieval design choices.
 
 \subsection{Cross-Benchmark Evaluation}
-We additionally evaluate all backends (except ChromaDB) on the LoCoMo benchmark~\citep{locomo2024}, which contains 1,986 MC questions across 10 long conversations (300--700 turns each). This enables cross-benchmark analysis of system behavior under different conditions: BiTempQA's short, dual-timestamp scenarios vs.\ LoCoMo's long, single-timestamp conversations.
+% 中文注释：这里保留原句语义，仅维持更标准的学术书面表达。
+We additionally evaluate all backends except ChromaDB on the LoCoMo benchmark~\citep{locomo2024}, which contains 1,986 multiple-choice questions across 10 long conversations (300--700 turns each). This enables a cross-benchmark comparison of system behavior under different conditions: BiTempQA's short, dual-timestamp scenarios versus LoCoMo's long, largely single-timestamp conversations.
 
 \subsection{Statistical Methods}
-We employ: (1) Bootstrap 95\% confidence intervals (10,000 iterations); (2) McNemar's test with continuity correction for pairwise system comparisons; (3) Mixed-effects logistic regression with scenario random intercepts to control for question type, difficulty, and temporal requirements; (4) LLM Judge cross-validation (DeepSeek-V3 vs.\ Qwen2.5-72B, Cohen's $\kappa{=}0.455$).
+% 中文注释：统一统计符号的数学间距，减少花括号式写法带来的公式感。
+We employ four statistical procedures: (1) bootstrap 95\% confidence intervals (10,000 iterations); (2) McNemar's test with continuity correction for pairwise system comparisons; (3) mixed-effects logistic regression with scenario random intercepts to control for question type, difficulty, and temporal requirements; and (4) LLM-judge cross-validation (DeepSeek-V3 vs.\ Qwen2.5-72B, Cohen's $\kappa = 0.455$).

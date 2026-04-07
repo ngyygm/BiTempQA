@@ -2,13 +2,14 @@
 
 \subsection{Overall Performance}
 Table~\ref{tab:overall} presents overall accuracy by system.
-FAISS leads at 75.6\%, followed closely by Naive RAG (74.0\%) and BM25 (73.4\%).
-Bootstrap 95\% CIs overlap substantially among the top three, and pairwise McNemar's tests show no significant differences ($p{>}0.3$).
-Simple KG (67.2\%) and ChromaDB (41.2\%) are significantly worse ($p{<}0.01$ and $p{<}0.001$ respectively).
+FAISS achieves the highest accuracy at 75.6\%, followed closely by Naive RAG (74.0\%) and BM25 (73.4\%).
+Bootstrap 95\% CIs overlap substantially among the top three, and pairwise McNemar's tests show no significant differences ($p > 0.3$).
+Simple KG (67.2\%) and ChromaDB (41.2\%) perform significantly worse than FAISS ($p < 0.01$ and $p < 0.001$, respectively).
 ChromaDB uses a different default embedding model (all-MiniLM-L6-v2) than the other vector-based systems; we include it for completeness but note this confound.
 
 \begin{table}[t]
 \centering
+% 中文注释：该表保持按栏宽缩放，只统一文字样式和符号间距，不改变尺寸策略。
 \resizebox{\columnwidth}{!}{%
 \begin{tabular}{lcccc}
 \toprule
@@ -22,7 +23,7 @@ ChromaDB$^{\dagger}$ & 41.2\% & [35.7, 46.8] & 0.744 & 37.2\% \\
 \bottomrule
 \end{tabular}%
 }
-\caption{Overall results on BiTempQA (308 questions). $^{\dagger}$\ ChromaDB uses a different embedding model (see \S\ref{sec:limitations}).}
+\caption{Overall results on BiTempQA (308 questions). $^{\dagger}$ ChromaDB uses a different embedding model; see \S\ref{sec:limitations}.}
 \label{tab:overall}
 \end{table}
 
@@ -30,6 +31,7 @@ ChromaDB$^{\dagger}$ & 41.2\% & [35.7, 46.8] & 0.744 & 37.2\% \\
 
 \begin{table}[t]
 \centering
+% 中文注释：这张表继续保持按栏宽缩放，只统一样式，不调整图表尺寸。
 \resizebox{\columnwidth}{!}{%
 \begin{tabular}{lcccc}
 \toprule
@@ -45,23 +47,25 @@ ChromaDB & 44.5\% & 50.0\% & 37.9\% & 37.2\% \\
 \bottomrule
 \end{tabular}%
 }
-\caption{Accuracy by temporal requirement. Record-only questions (n=24) are hardest across all systems; the gap is suggestive given the small sample size.}
+\caption{Accuracy by temporal requirement. Record-only questions ($n = 24$) are hardest across all systems, though the sample is small.}
 \label{tab:temporal_breakdown}
 \end{table}
 
 Table~\ref{tab:temporal_breakdown} shows accuracy by temporal requirement.
-Record-only questions average 60.8\% vs.\ 69.1\% for event-only, an 8.3pp gap consistent across all five systems.
-To confirm this is not a distribution artifact, we fit a mixed-effects logistic regression with scenario random intercepts, controlling for system identity, question type, difficulty level, and all temporal requirement flags.
+Record-only questions average 60.8\% compared with 69.1\% for event-only questions, yielding an 8.3pp gap that appears consistently across all five systems.
+To examine whether this pattern can be explained by other dataset factors, we fit a mixed-effects logistic regression with scenario random intercepts, controlling for system identity, question type, difficulty level, and temporal requirement flags.
 
 \begin{table}[t]
 \centering
+% 中文注释：这里仅微调表格列间距，目标是消除轻微 overfull warning，不改变表格栏归属或视觉层级。
 \small
-\begin{tabular}{lccc}
+\setlength{\tabcolsep}{4.5pt}
+\begin{tabular}{@{}lccc@{}}
 \toprule
 \textbf{Predictor} & \textbf{Coef.} & \textbf{z} & \textbf{p} \\
 \midrule
 \multicolumn{4}{l}{\textit{System effects} (ref: FAISS)} \\
-\quad ChromaDB & $-$0.344 & $-$10.53 & $<$0.001 \\
+\quad ChromaDB & $-$0.344 & $-$10.53 & $< 0.001$ \\
 \quad Simple KG & $-$0.084 & $-$2.58 & 0.010 \\
 \quad BM25 & $-$0.023 & $-$0.70 & 0.487 \\
 \quad Naive RAG & $-$0.016 & $-$0.50 & 0.619 \\
@@ -72,60 +76,65 @@ To confirm this is not a distribution artifact, we fit a mixed-effects logistic 
 \quad Version tracking & 0.050 & 1.29 & 0.199 \\
 \quad Knowledge retraction & $-$0.080 & $-$1.50 & 0.135 \\
 \midrule
-Scenario variance & \multicolumn{3}{c}{$\sigma^2{=}0.049$} \\
+Scenario variance & \multicolumn{3}{c}{$\sigma^2 = 0.049$} \\
 \bottomrule
 \end{tabular}
-\caption{Mixed-effects logistic regression (scenario random intercepts, $N{=}1{,}540$). Record-time requirement is the only temporal factor reaching significance.}
+\caption{Mixed-effects logistic regression ($N = 1{,}540$) with scenario random intercepts. Record-time requirement is the only significant temporal factor.}
 \label{tab:regression}
 \end{table}
 
-The record-time coefficient ($\beta{=}{-}0.079$, $p{=}0.023$) remains significant after controlling for all confounds (Table~\ref{tab:regression}), confirming that the dual-timestamp dimension captures a genuinely harder reasoning capability.
-Notably, difficulty levels (L2/L3) are \emph{not} independently predictive after controls ($p{=}0.103$, $p{=}0.278$), suggesting the difficulty gradient is largely mediated by the distribution of harder question types at higher levels.
+% 中文注释：这里只统一数学间距和字体强调方式，不改变结论强度。
+% 中文注释：这里把“confirming”改成更审慎的 “indicating / suggesting”，避免把相关性写成过强结论。
+The record-time coefficient ($\beta = -0.079$, $p = 0.023$) remains significant after controlling for the other factors in the model (Table~\ref{tab:regression}), indicating that record-time requirements are associated with greater difficulty.
+Notably, difficulty levels (L2/L3) are not independently predictive after controls ($p = 0.103$, $p = 0.278$), suggesting that the observed difficulty gradient is largely mediated by the distribution of harder question types at higher levels.
 
 \subsection{Per-Question-Type Analysis}
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{figures/fig3_heatmap.pdf}
-\caption{System $\times$ question type accuracy heatmap. No single system dominates all types; the 40.6pp spread across types confirms the typology captures distinct challenges.}
+\caption{System $\times$ question-type accuracy heatmap. No single system dominates all types, and the 40.6pp spread confirms that the typology captures distinct challenges.}
 \label{fig:heatmap}
 \end{figure}
 
-Figure~\ref{fig:heatmap} reveals substantial system$\times$type interactions.
+Figure~\ref{fig:heatmap} reveals substantial system $\times$ type interactions.
 FAISS leads on complex temporal (87.1\%) and counterfactual (53.8\%); BM25 excels at point-in-time (85.7\%) and multi-hop (83.3\%); Simple KG tops period query (88.9\%).
-The 40.6pp spread across question types (counterfactual: 48.7\% to temporal order: 89.3\%) validates the typology.
+The 40.6pp spread across question types (counterfactual: 48.7\% to temporal order: 89.3\%) suggests that the typology captures meaningfully different challenges.
 
 \subsection{Difficulty Calibration}
-All five systems show monotonic L1$\to$L3 degradation, but with strikingly different robustness: FAISS drops only 2.9pp vs.\ BM25's 16.6pp (Figure~\ref{fig:difficulty}).
+% 中文注释：这里只统一箭头和符号间距，不改变结论或图表大小。
+All five systems show monotonic L1 $\rightarrow$ L3 degradation, but the magnitude of the drop varies substantially: FAISS declines by only 2.9pp, whereas BM25 declines by 16.6pp (Figure~\ref{fig:difficulty}).
 FAISS's dense representations appear to maintain semantic relevance even under complex compositional demands, while BM25's keyword matching deteriorates sharply when query--document lexical overlap decreases.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{figures/fig4_difficulty.pdf}
-\caption{Accuracy degradation from L1 to L3. FAISS is most robust ($-$2.9pp); BM25 is most fragile ($-$16.6pp).}
+\caption{Accuracy degradation from L1 to L3. FAISS is most robust ($-2.9$pp), whereas BM25 is most fragile ($-16.6$pp).}
 \label{fig:difficulty}
 \end{figure}
 
 \subsection{System Complementarity}
-An oracle ensemble (correct if \emph{any} system answers correctly) achieves \textbf{85.4\%}, a 9.8pp gain over the best single system, confirming that memory backends have substantially non-overlapping error profiles (Figure~\ref{fig:complementarity}).
+An oracle ensemble (counting an item as correct if any system answers it correctly) reaches 85.4\%, a 9.8pp gain over the best single system, suggesting that the memory backends have substantially non-overlapping error profiles (Figure~\ref{fig:complementarity}).
 FAISS-ChromaDB Jaccard overlap is only 0.446 (lowest), while FAISS-SimpleKG is 0.746.
 Simple KG uniquely solves 6 items that FAISS misses, and ChromaDB uniquely solves 6, despite its low overall accuracy.
-45 items (14.6\%) are answered incorrectly by \emph{all} systems, establishing a hard irreducible ceiling.
+Forty-five items (14.6\%) are answered incorrectly by all systems, indicating a substantial residual error set under the current evaluation setup.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{figures/fig5_complementarity.pdf}
-\caption{Oracle ensemble reaches 85.4\% vs.\ 75.6\% best single system. 45 irreducible failures suggest retrieval-independent challenges.}
+\caption{The oracle ensemble reaches 85.4\%, versus 75.6\% for the best single system. Forty-five irreducible failures suggest retrieval-independent challenges.}
 \label{fig:complementarity}
 \end{figure}
 
 \subsection{Cross-Benchmark Validation with LoCoMo}
 Table~\ref{tab:locomo} compares BiTempQA results with LoCoMo evaluation.
-The most striking finding is Simple KG's asymmetry: 97.5\% adversarial accuracy on LoCoMo (best of all systems, +34pp above average) but 37.5\% temporal reasoning on LoCoMo (worst, $-$9pp) and 67.2\% on BiTempQA.
-This reflects a fundamental trade-off: graph structures resist adversarial hallucination (returning empty context for non-existent facts) but lack the retrieval breadth needed for temporal reasoning.
+% 中文注释：这里只整理字体和符号间距，保留原有对比结论。
+The clearest cross-benchmark asymmetry appears in Simple KG: it reaches 97.5\% adversarial accuracy on LoCoMo (best among the evaluated systems, +34pp above average), but only 37.5\% on LoCoMo temporal reasoning and 67.2\% on BiTempQA.
+This pattern is consistent with a trade-off in which graph structures help avoid adversarial hallucination by returning little or no context for non-existent facts, but offer less retrieval breadth for temporal reasoning.
 
 \begin{table}[t]
 \centering
+% 中文注释：跨基准表格继续按栏宽缩放，只统一字体和数学符号间距。
 \resizebox{\columnwidth}{!}{%
 \begin{tabular}{lccccc}
 \toprule
@@ -140,6 +149,6 @@ Simple KG & 67.2\% & 67.2\% & 56.8\% & 37.5\% & \textbf{97.5\%} \\
 \bottomrule
 \end{tabular}%
 }
-\caption{Cross-benchmark comparison. Simple KG shows extreme adversarial-temporal asymmetry.}
+\caption{Cross-benchmark comparison. Simple KG shows an extreme adversarial-temporal asymmetry.}
 \label{tab:locomo}
 \end{table}

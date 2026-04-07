@@ -1,13 +1,15 @@
 \section{BiTempQA Benchmark}
 
 \subsection{Problem Formulation}
-Following bitemporal data modeling~\citep{snodgrass1999tsql2}, we define two temporal dimensions.
-\textbf{Event Time} ($t_e$) is when an event actually occurred in the real world.
-\textbf{Record Time} ($t_r$) is when the memory system recorded the event.
-A memory entry is a tuple $m = (\text{text}, t_e, t_r)$, and a memory store at logical time $T$ contains all entries with $t_r \leq T$. A question may require reasoning about $t_e$ only, $t_r$ only, or both simultaneously.
+Following bitemporal data modeling~\citep{snodgrass1999tsql2}, we define two temporal dimensions for memory-system evaluation.
+% 中文注释：把定义项从粗体改为斜体，减少过重强调，同时保持术语定义清晰。
+\textit{Event time} ($t_e$) is when an event actually occurred in the real world.
+\textit{Record time} ($t_r$) is when the memory system recorded the event.
+% 中文注释：把 text 改为文本型说明，避免数学模式里混入不必要的特殊字体。
+A memory entry is represented as a tuple $(\textit{text}, t_e, t_r)$, and a memory store at logical time $T$ contains all entries with $t_r \leq T$. A question may require reasoning about $t_e$ only, $t_r$ only, or both simultaneously.
 
 \subsection{Scenario Design}
-We design \textbf{10 scenario types} spanning 6 domains (corporate, academic, social, fictional, historical, scientific):
+We design 10 scenario types spanning 6 domains (corporate, academic, social, fictional, historical, and scientific):
 (1) Entity Attribute Evolution: attributes change over time (e.g., job titles);
 (2) Relationship Evolution: social/professional relationships change;
 (3) Contradictory Information: different sources report conflicting facts;
@@ -19,24 +21,28 @@ We design \textbf{10 scenario types} spanning 6 domains (corporate, academic, so
 (9) Gradual Accumulation: knowledge builds incrementally over time;
 (10) Temporal Ambiguity: unclear or ambiguous temporal references.
 
-Each scenario consists of 3--5 memory writes, each annotated with explicit $t_e$ and $t_r$ ISO~8601 timestamps. Scenarios are designed so that $t_e \neq t_r$ in the majority of cases, creating natural bitemporal tension.
+% 中文注释：调整时间戳短语语序，使英语更自然，不改变方法定义。
+Each scenario consists of 3--5 memory writes, each annotated with explicit ISO~8601 timestamps for $t_e$ and $t_r$. In most cases, scenarios are constructed so that $t_e \neq t_r$, creating natural bitemporal tension.
 
 \subsection{Question Taxonomy}
-Questions are organized into \textbf{9 types} at \textbf{3 difficulty levels}:
+Questions are organized into 9 types at 3 difficulty levels:
 
-\textbf{Level 1 (Easy)}: Point-in-time retrieval, temporal ordering, first-recorded detection.
+\textit{Level 1 (Easy).} Point-in-time retrieval, temporal ordering, first-recorded detection.
 
-\textbf{Level 2 (Medium)}: Period queries, change detection, multi-hop temporal reasoning.
+\textit{Level 2 (Medium).} Period queries, change detection, multi-hop temporal reasoning.
 
-\textbf{Level 3 (Hard)}: Counterfactual reasoning, version conflict resolution, complex temporal composition.
+\textit{Level 3 (Hard).} Counterfactual reasoning, version conflict resolution, complex temporal composition.
 
-Questions use three answer formats: multiple choice (4 options, 43.8\%), abstractive (free text, 53.0\%), and boolean (3.2\%). Every question is annotated with metadata flags: \texttt{requires\_event\_time}, \texttt{requires\_record\_time}, \texttt{requires\_version\_tracking}, and \texttt{requires\_knowledge\_retraction}.
+% 中文注释：将长代码样式字段名改为普通英文说明，减少特殊字体并缓解下划线导致的断行问题。
+Questions use three answer formats: multiple choice (4 options, 43.8\%), abstractive (free text, 53.0\%), and boolean (3.2\%). Each question is annotated with metadata indicating whether it requires event time, record time, version tracking, or knowledge retraction.
 
 \subsection{Dataset Statistics}
-BiTempQA contains \textbf{1,536 QA pairs across 120 scenarios}, split into train (1,075), dev (153), and test (308). All reported results use the held-out test set (308 pairs across 112 scenarios; 8 scenarios are held exclusively for train/dev). Table~\ref{tab:composition} shows the dual-timestamp composition of the test set.
+% 中文注释：保留数据规模信息，但取消不必要的行内粗体，减轻版面视觉负担。
+BiTempQA contains 1,536 QA pairs across 120 scenarios, split into train (1,075), dev (153), and test (308). All reported results use the held-out test set (308 pairs across 112 scenarios; 8 scenarios are reserved exclusively for train/dev). Table~\ref{tab:composition} shows the dual-timestamp composition of the test set.
 
 \begin{table}[t]
 \centering
+% 中文注释：示例列文本较长，恢复按栏宽缩放以保证不越过双栏边界。
 \resizebox{\columnwidth}{!}{%
 \begin{tabular}{lrl}
 \toprule
@@ -51,17 +57,19 @@ Knowledge retraction & 28 (9.1\%) & ``Is the earlier claim about X still valid?'
 \bottomrule
 \end{tabular}%
 }
-\caption{Dual-timestamp composition of the BiTempQA test set (308 questions). Over half of questions require reasoning about both $t_e$ and $t_r$ simultaneously. Categories are not mutually exclusive.}
+\caption{Dual-timestamp composition of the BiTempQA test set (308 questions). Over half of the questions require reasoning about both $t_e$ and $t_r$. Categories are not mutually exclusive.}
 \label{tab:composition}
 \end{table}
 
-All QA pairs are generated via Qwen2.5-72B-Instruct with structured prompts, then validated for parseability and temporal consistency. The dataset is Chinese-language, reflecting the growing importance of multilingual NLP evaluation.
+All QA pairs are generated with Qwen2.5-72B-Instruct using structured prompts and are then validated for parseability and temporal consistency. The dataset is Chinese-language, reflecting the growing importance of multilingual NLP evaluation.
 
 \subsection{Evaluation Pipeline}
-We implement a unified \textbf{Retrieve$\to$Generate$\to$Judge} pipeline (Figure~\ref{fig:framework}):
+% 中文注释：统一箭头两侧的数学间距，并去掉行内粗体，减少标题式强调。
+We implement a unified Retrieve $\rightarrow$ Generate $\rightarrow$ Judge pipeline (Figure~\ref{fig:framework}):
 
-\textbf{Step 1, Retrieve}: The memory backend retrieves the top-$k$ context passages given the question and scenario memory store.
+% 中文注释：步骤名改为斜体短句，避免连续粗体造成视觉过重。
+\textit{Step 1: Retrieve.} The memory backend retrieves the top-$k$ context passages given the question and the scenario memory store.
 
-\textbf{Step 2, Generate}: DeepSeek-V3~\citep{deepseekv3} generates an answer conditioned on the retrieved context.
+\textit{Step 2: Generate.} DeepSeek-V3~\citep{deepseekv3} generates an answer conditioned on the retrieved context.
 
-\textbf{Step 3, Judge}: An independent LLM call scores the generated answer against the gold answer. For MC questions, exact letter match is used (100\% parse rate). For abstractive and boolean questions, DeepSeek-V3 in \texttt{answer\_judge} mode evaluates semantic correctness with lenient matching. Without the LLM judge, abstractive accuracy drops to ${\sim}10\%$ (text matching too strict); with it, accuracy is ${\sim}75\%$ (fair semantic evaluation).
+\textit{Step 3: Judge.} An independent LLM call scores the generated answer against the gold answer. For MC questions, exact letter matching is used (100\% parse rate). For abstractive and boolean questions, DeepSeek-V3 in ``answer\_judge'' mode evaluates semantic correctness with lenient matching. Without the LLM judge, abstractive accuracy drops to $\sim 10\%$, indicating that exact text matching is too strict; with the judge, accuracy rises to $\sim 75\%$, providing a more semantically appropriate evaluation.

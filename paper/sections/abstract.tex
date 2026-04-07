@@ -1,10 +1,16 @@
-Memory-augmented LLM agents must track not only \emph{what} happened but \emph{when} it happened and \emph{when they learned about it}, a dual-timestamp (bitemporal) distinction critical for real-world applications such as medical records, financial systems, and news analysis.
-Existing benchmarks either ignore timestamps entirely or treat time as a single dimension, leaving a gap in evaluating this capability.
+% 中文注释：减少摘要中不必要的斜体、粗体和代码字体，使整体样式更贴近 ACL/EMNLP 正文风格。
+% 中文注释：按你的要求，把摘要首句里原本有辨识作用的斜体强调恢复回来，但不扩大到整段。
+Memory-augmented LLM agents must track not only \emph{what} happened but also \emph{when} it happened and \emph{when they learned about it}, a dual-timestamp (bitemporal) distinction that is important in applications such as medical records, financial systems, and news analysis.
+Existing benchmarks either ignore timestamps or treat time as a single dimension, leaving this capability insufficiently evaluated.
 
-We introduce \textbf{BiTempQA}, a diagnostic benchmark of 1,536 Chinese question-answer pairs (308 held-out test) across 10 scenario types and 9 question types at three difficulty levels, where each memory entry carries explicit \texttt{event\_time} (when something occurred) and \texttt{record\_time} (when the system stored it) annotations.
+% 中文注释：这里保留原语义，但把 event_time / record_time 从代码字体改为普通学术表述，避免摘要中出现过多特殊字形。
+% 中文注释：这里把语气收紧为更标准的 benchmark 介绍写法，避免过强宣传式表述。
+We introduce BiTempQA, a diagnostic benchmark of 1,536 Chinese question-answer pairs, including 308 held-out test items, spanning 10 scenario types and 9 question types across three difficulty levels. Each memory entry carries explicit event-time and record-time annotations.
 Over half (56.5\%) of questions require reasoning about both timestamps simultaneously.
-We evaluate five memory backends (FAISS, BM25, Naive RAG, Simple KG, ChromaDB) through a unified Retrieve$\to$LLM Generate$\to$LLM Judge pipeline.
-A mixed-effects logistic regression confirms that record-time reasoning is genuinely harder than event-time reasoning ($p{=}0.023$), surviving controls for question type, difficulty, and scenario variation.
-We further find that: (1) the top three systems are statistically tied overall ($p{>}0.3$) but diverge on specific question types (40.6pp accuracy spread); (2) an oracle ensemble of all systems achieves 85.4\% (+9.8pp over any single system); (3) approximately 55\% of failures stem from retrieval limitations rather than reasoning errors; and (4) system confidence scores are \emph{anti-calibrated} (AUROC${}<0.5$), predicting failure better than success.
-Cross-validation with the LoCoMo benchmark reveals striking system asymmetries: Simple KG dominates adversarial questions (97.5\%) but trails on temporal reasoning (37.5\%).
-BiTempQA is released as an open diagnostic tool for developing temporally-aware memory systems.
+% 中文注释：调整箭头和统计量的数学间距，让摘要的视觉风格更统一。
+We evaluate five memory backends (FAISS, BM25, Naive RAG, Simple KG, and ChromaDB) in a unified Retrieve $\rightarrow$ LLM Generate $\rightarrow$ LLM Judge pipeline.
+A mixed-effects logistic regression indicates that record-time reasoning is more difficult than event-time reasoning ($p = 0.023$) after controlling for question type, difficulty, and scenario variation.
+We further find that (1) the top three systems are not significantly different overall ($p > 0.3$) but diverge by question type (40.6pp accuracy spread); (2) an oracle ensemble reaches 85.4\%, a gain of 9.8pp over the best individual system; (3) approximately 55\% of sampled failures appear retrieval-related; and (4) system confidence scores are poorly calibrated, with FAISS and BM25 showing AUROC $< 0.5$.
+% 中文注释：Cross-validation on 为更自然的 benchmark 搭配，保留原判断不变。
+Cross-benchmark comparison with LoCoMo reveals marked system asymmetries: Simple KG performs best on adversarial questions (97.5\%) but underperforms on temporal reasoning (37.5\%).
+BiTempQA provides an open diagnostic resource for studying temporally aware memory systems.

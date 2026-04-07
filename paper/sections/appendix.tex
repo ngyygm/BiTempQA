@@ -1,13 +1,16 @@
-\section{Appendix}
+﻿\section{Appendix}
 
 \subsection{Full Per-Question-Type Results}
 
 Table~\ref{tab:full_qtype} provides complete per-question-type accuracy across all systems and types.
 
-\begin{table*}[h]
+% 中文注释：附录表格固定在当前位置，避免浮动到 Appendix 标题之前。
+\begin{table}[H]
 \centering
 \footnotesize
 \setlength{\tabcolsep}{4pt}
+% 中文注释：附录改为单栏后，这里按单栏全文宽度缩放，避免表格超出版心。
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{lccccc}
 \toprule
 \textbf{Question Type (Level)} & \textbf{FAISS} & \textbf{BM25} & \textbf{Naive RAG} & \textbf{Simple KG} & \textbf{ChromaDB} \\
@@ -23,16 +26,18 @@ Complex Temporal (L3) & \textbf{87.1\%} & 80.6\% & 83.9\% & 71.0\% & 29.0\% \\
 \midrule
 \textbf{Average} & \textbf{74.2\%} & 71.5\% & 72.2\% & 65.8\% & 40.7\% \\
 \bottomrule
-\end{tabular}
-\caption{Complete per-question-type accuracy. Version Conflict excluded due to insufficient samples. Spread: 48.7\% (Counterfactual) to 92.9\% (Temporal Order).}
+\end{tabular}%
+}
+\caption{Complete per-question-type accuracy. Version Conflict is excluded because of insufficient samples. The spread ranges from 48.7\% (Counterfactual) to 92.9\% (Temporal Order).}
 \label{tab:full_qtype}
-\end{table*}
+\end{table}
 
 \subsection{LLM Judge Cross-Validation Details}
 
 We cross-validated DeepSeek-V3 against Qwen2.5-72B-Instruct on 50 abstractive QA pairs from the FAISS system (random sample, seed=42).
 
-\begin{table}[h]
+% 中文注释：附录中的第二张表也固定位置，保证小节标题和表格顺序符合阅读习惯。
+\begin{table}[H]
 \centering
 \small
 \begin{tabular}{lc}
@@ -51,6 +56,6 @@ Qwen2.5-72B judged correct & 60.0\% (30/50) \\
 \quad Pattern: answer too short & 6/12 \\
 \bottomrule
 \end{tabular}
-\caption{LLM Judge cross-validation. DeepSeek-V3 is systematically more lenient, accepting partial answers that Qwen rejects.}
+\caption{LLM Judge cross-validation. DeepSeek-V3 is systematically more lenient and accepts partial answers that Qwen rejects.}
 \label{tab:judge_detail}
 \end{table}

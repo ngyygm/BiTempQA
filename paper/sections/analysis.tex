@@ -1,12 +1,15 @@
 \section{Diagnostic Analysis}
 
 \subsection{Retrieval Is the Bottleneck}
-We sampled 20 FAISS failures (best system) and classified them by retrieval context length.
-All 20 had short or empty retrieval context ($<$200 characters), compared to ${\sim}500$ chars average for correct answers.
-Heuristic classification estimates ${\sim}55\%$ retrieval failure vs.\ ${\sim}45\%$ reasoning failure, suggesting that improving retrieval quality, particularly temporal-aware retrieval, would yield larger gains than improving reasoning capability.
+% 中文注释：这里改成更短的表达，同时顺手消除开头那条轻微的断行 warning。
+We sampled 20 FAISS failures and grouped them by retrieval-context length.
+% 中文注释：这里只统一符号间距和普通字体，不改变分析结论。
+All 20 had short or empty retrieval context ($< 200$ characters), compared with an average of $\sim 500$ characters for correct answers.
+This heuristic analysis attributes roughly $\sim 55\%$ of the sampled failures to retrieval and $\sim 45\%$ to downstream reasoning, suggesting that improvements in retrieval quality, particularly temporal-aware retrieval, may yield larger gains than improvements in reasoning alone.
 
 \subsection{Confidence Is Anti-Calibrated}
-A striking diagnostic finding: vector-based systems produce \emph{anti-calibrated} confidence scores.
+% 中文注释：保留术语，但取消不必要的斜体强调，让正文更接近 ACL 常见风格。
+A notable diagnostic finding is that some vector-based systems exhibit anti-calibrated confidence scores.
 Table~\ref{tab:calibration} shows Expected Calibration Error (ECE), Brier score, and AUROC for each system.
 
 \begin{table}[t]
@@ -23,20 +26,21 @@ Simple KG & 0.672 & 0.672 & 0.500 \\
 ChromaDB & 0.412 & 0.412 & 0.500 \\
 \bottomrule
 \end{tabular}
-\caption{Confidence calibration metrics. FAISS and BM25 show AUROC${}<0.5$: wrong answers receive \emph{higher} confidence than correct ones.}
+\caption{Confidence calibration metrics. FAISS and BM25 show AUROC $< 0.5$, meaning that wrong answers receive higher confidence than correct ones.}
 \label{tab:calibration}
 \end{table}
 
-FAISS's AUROC of 0.453 means confidence scores are \emph{worse than random} at predicting correctness: wrong answers receive higher confidence than correct ones.
-This has practical implications: agents cannot rely on internal confidence to decide whether to trust a temporal memory answer or seek verification.
+FAISS's AUROC of 0.453 indicates that confidence scores are worse than random at predicting correctness: wrong answers often receive higher confidence than correct ones.
+This has practical implications, because agents cannot reliably use internal confidence alone to determine whether a temporal-memory answer should be trusted or externally verified.
 
 \subsection{Knowledge Retraction vs.\ Version Tracking}
 We decompose performance on questions involving knowledge dynamics (Table~\ref{tab:retraction}).
-Simple KG shows an asymmetric profile: strong at version tracking (81.0\%, close to FAISS's 82.8\%) but weak at knowledge retraction (53.6\%).
-This suggests graph structures naturally support tracking fact evolution but struggle with explicitly revoking superseded knowledge, a distinction with implications for memory architecture design.
+Simple KG shows an asymmetric profile: it is relatively strong on version tracking (81.0\%, close to FAISS's 82.8\%) but weaker on knowledge retraction (53.6\%).
+This pattern suggests that graph structures may naturally support tracking fact evolution, while handling explicit revocation of superseded knowledge remains more difficult.
 
 \begin{table}[t]
 \centering
+% 中文注释：该表继续保持按栏宽缩放，只统一字体和符号间距，不改变尺寸策略。
 \resizebox{\columnwidth}{!}{%
 \begin{tabular}{lccc}
 \toprule
@@ -50,18 +54,19 @@ ChromaDB & 39.3\% & 37.9\% & 42.3\% \\
 \bottomrule
 \end{tabular}%
 }
-\caption{Accuracy by knowledge dynamics type. Simple KG: strong version tracking but weak retraction. Bootstrap CIs for retraction span 35pp due to small n=28.}
+\caption{Accuracy by knowledge-dynamics type. Simple KG is strong at version tracking but weak at retraction. Bootstrap CIs for retraction span 35pp because $n = 28$ is small.}
 \label{tab:retraction}
 \end{table}
 
 \subsection{Implications for Memory System Design}
-Our findings suggest three design recommendations:
+Our findings suggest three design implications:
 
 \paragraph{1. Temporal-aware retrieval.}
-Since ${\sim}55\%$ of failures are retrieval-limited, adding temporal metadata filtering (e.g., ``retrieve only facts recorded before $T$'') or bitemporal indexing would likely yield larger gains than improving the reasoning model.
+Since $\sim 55\%$ of sampled failures are retrieval-limited, adding temporal metadata filtering (e.g., ``retrieve only facts recorded before $T$'') or bitemporal indexing may yield larger gains than improving the reasoning model alone.
 
 \paragraph{2. Hybrid vector+graph architectures.}
-The complementarity between systems (oracle +9.8pp) and Simple KG's unique adversarial robustness suggest combining dense retrieval's breadth with graph structure's precision would outperform either alone.
+% 中文注释：这里只统一字体，不改原始推断力度。
+The complementarity between systems (oracle +9.8pp) and Simple KG's adversarial robustness suggest that combining dense retrieval's breadth with graph structure's precision could outperform either approach alone.
 
 \paragraph{3. External verification for temporal claims.}
-Anti-calibrated confidence means internal signals cannot identify uncertain temporal answers. External verification (e.g., cross-checking against source timestamps) should be triggered for all bitemporal queries.
+Anti-calibrated confidence means that internal signals are unreliable for identifying uncertain temporal answers. External verification, such as cross-checking against source timestamps, may therefore be especially valuable for bitemporal queries.
