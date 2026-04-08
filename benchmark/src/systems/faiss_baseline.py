@@ -37,7 +37,7 @@ class FAISSBaseline(MemorySystem):
         except ImportError:
             raise ImportError("faiss-cpu not installed. Run: pip install faiss-cpu")
 
-    def remember(self, text: str, event_time: str, source_name: str = "scenario_trace") -> str:
+    def remember(self, text: str, event_time: str, record_time: Optional[str] = None, source_name: str = "scenario_trace") -> str:
         self.texts.append(text)
         emb = self.encoder.encode([text], normalize_embeddings=True)
         if self.embeddings is None:

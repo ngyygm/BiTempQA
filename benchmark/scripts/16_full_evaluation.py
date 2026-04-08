@@ -241,8 +241,12 @@ def run_bitpqa(
         logger.warning(f"BiTempQA QA file not found: {qa_path}")
         return {}
 
-    # Load scenarios
-    scenarios_path = Path(__file__).parent.parent / "data/generated/scenarios/all_scenarios.json"
+    # Load scenarios (v3 merged if available, otherwise v1)
+    scenarios_path = Path(__file__).parent.parent / config.get("dataset", {}).get(
+        "scenarios_path", "data/generated/merged_v3/all_scenarios_v3.json"
+    )
+    if not scenarios_path.exists():
+        scenarios_path = Path(__file__).parent.parent / "data/generated/scenarios/all_scenarios.json"
     if not scenarios_path.exists():
         logger.warning(f"Scenarios file not found: {scenarios_path}")
         return {}

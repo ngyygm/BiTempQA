@@ -35,54 +35,61 @@ class Mem0Baseline(MemorySystem):
     ):
         super().__init__(name="Mem0")
 
-        # Set environment variables for Mem0's OpenAI client
-        if llm_api_key:
-            os.environ["OPENAI_API_KEY"] = llm_api_key
-        if llm_base_url:
-            os.environ["OPENAI_BASE_URL"] = llm_base_url
+        # Set env vars BEFORE importing mem0 (it reads them at import time)
+        api_key = llm_api_key or os.environ.get("OPENAI_API_KEY", "")
+        base_url = llm_base_url or "https://api.siliconflow.cn/v1"
+        model = llm_model or "deepseek-ai/DeepSeek-V3"
 
-        # Build config dict for Mem0
-        from mem0.configs.base import LlmConfig, EmbedderConfig
-
-        llm_config = LlmConfig(
-            provider="openai",
-            config={
-                "model": llm_model or "deepseek-ai/DeepSeek-V3",
-                "openai_base_url": llm_base_url or "https://api.siliconflow.cn/v1",
-                "api_key": llm_api_key or os.environ.get("OPENAI_API_KEY", ""),
-                "temperature": 0.0,
-            },
-        )
-
-        embedder_config = None
-        if embedder_model:
-            embedder_config = EmbedderConfig(
-                provider="openai",
-                config={"model": embedder_model},
-            )
+        os.environ["OPENAI_API_KEY"] = api_key
+        os.environ["OPENAI_BASE_URL"] = base_url
 
         from mem0 import Memory
-        self.m = Memory(config=None)  # type: ignore
 
-        # Override the LLM config
-        self.m.config.llm = llm_config
-        if embedder_config:
-            self.m.config.embedder = embedder_config
+        config = {
+            "llm": {
+                "provider": "openai",
+                "config": {
+                    "model": model,
+                    "openai_base_url": base_url,
+                    "api_key": api_key,
+                    "temperature": 0.0,
+                },
+            },
+            "embedder": {
+                "provider": "openai",
+                "config": {
+                    "model": embedder_model or "Pro/BAAI/bge-m3",
+                    "openai_base_url": base_url,
+                    "api_key": api_key,
+                },
+            },
+            "vector_store": {
+                "provider": "qdrant",
+                "config": {
+                    "embedding_model_dims": 1024,
+                },
+            },
+            "version": "v1.1",
+        }
 
-        logger.info(f"Mem0 initialized (model={llm_model or 'default'})")
+        self.m = Memory.from_config(config)
+        logger.info(f"Mem0 initialized (model={model})")
 
-    def remember(self, text: str, event_time: str = "", source_name: str = "scenario_trace") -> str:
+    def remember(self, text: str, event_time: str = "", record_time: Optional[str] = None, source_name: str = "scenario_trace") -> str:
         """Store a memory using Mem0's add() API."""
         try:
+            metadata = {
+                "event_time": event_time,
+                "source": source_name,
+            }
+            if record_time:
+                metadata["record_time"] = record_time
+
             result = self.m.add(
                 messages=[{"role": "user", "content": text}],
                 user_id=self.USER_ID,
-                metadata={
-                    "event_time": event_time,
-                    "source": source_name,
-                },
-                # Disable inference for speed in benchmark
-                infer=False,
+                metadata=metadata,
+                infer=True,
             )
             # result is a dict with "results" key
             if isinstance(result, dict) and "results" in result:
@@ -106,21 +113,13 @@ class Mem0Baseline(MemorySystem):
         start_time = time.time()
 
         try:
-            # Build filters for temporal queries
-            filters = {}
-            if time_before or time_after:
-                metadata_filter = {}
-                if time_before:
-                    metadata_filter["event_time"] = {"$lt": time_before}
-                if time_after:
-                    metadata_filter["event_time"] = {"$gt": time_after}
-                filters["metadata"] = metadata_filter
-
+            # Mem0/Qdrant doesn't support range filters ($lt/$gt),
+            # so we do pure semantic search and let the answer generator
+            # handle temporal reasoning from the retrieved context.
             result = self.m.search(
                 query=question,
                 user_id=self.USER_ID,
-                limit=10,
-                filters=filters if filters else None,
+                limit=5,
             )
 
             facts: List[str] = []

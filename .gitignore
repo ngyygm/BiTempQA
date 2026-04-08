@@ -27,6 +27,13 @@ benchmark/data/eval_results/pilot/
 benchmark/data/eval_results/locomo/
 benchmark/data/eval_results/judge_cache.json
 
+# ChronoQA images (15MB, not needed)
+benchmark/data/raw/ChronoQA/imgs/
+benchmark/data/raw/ChronoQA/scripts/
+
+# Benchmark paper copy (duplicate of paper/)
+benchmark/paper/
+
 # IDE
 .vscode/
 .idea/

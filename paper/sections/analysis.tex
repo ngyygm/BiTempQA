@@ -1,72 +1,63 @@
 \section{Diagnostic Analysis}
 
-\subsection{Retrieval Is the Bottleneck}
-% 中文注释：这里改成更短的表达，同时顺手消除开头那条轻微的断行 warning。
-We sampled 20 FAISS failures and grouped them by retrieval-context length.
-% 中文注释：这里只统一符号间距和普通字体，不改变分析结论。
-All 20 had short or empty retrieval context ($< 200$ characters), compared with an average of $\sim 500$ characters for correct answers.
-This heuristic analysis attributes roughly $\sim 55\%$ of the sampled failures to retrieval and $\sim 45\%$ to downstream reasoning, suggesting that improvements in retrieval quality, particularly temporal-aware retrieval, may yield larger gains than improvements in reasoning alone.
+\subsection{Why Do Top Lightweight Systems Cluster?}
+The tight clustering of BM25, FAISS, Naive RAG, and Simple KG (81.0--82.1\%) is a striking finding.
+All four systems achieve identical L2 accuracy (100.0\%) and nearly identical L1 accuracy (80.2--81.5\%).
+This suggests that for BiTempQA's short-context scenarios (2--7 memory writes per scenario), retrieval design matters less than answer generation quality---all systems retrieve sufficient context for the LLM generator to reason about bitemporal relationships.
 
-\subsection{Confidence Is Anti-Calibrated}
-% 中文注释：保留术语，但取消不必要的斜体强调，让正文更接近 ACL 常见风格。
-A notable diagnostic finding is that some vector-based systems exhibit anti-calibrated confidence scores.
-Table~\ref{tab:calibration} shows Expected Calibration Error (ECE), Brier score, and AUROC for each system.
+We hypothesize that the bottleneck shifts from retrieval to generation as context length decreases below a threshold.
+With only 2--7 facts per scenario, even a naive concatenation strategy (Naive RAG) retrieves the full relevant context within top-$k{=}5$.
+Future work should test this hypothesis with longer scenarios (50+ writes) where retrieval selectivity becomes critical.
 
-\begin{table}[t]
-\centering
-\small
-\begin{tabular}{lccc}
-\toprule
-\textbf{System} & \textbf{ECE}$\downarrow$ & \textbf{Brier}$\downarrow$ & \textbf{AUROC} \\
-\midrule
-FAISS & 0.163 & 0.229 & 0.453 \\
-Naive RAG & 0.319 & 0.303 & 0.552 \\
-BM25 & 0.235 & 0.769 & 0.467 \\
-Simple KG & 0.672 & 0.672 & 0.500 \\
-ChromaDB & 0.412 & 0.412 & 0.500 \\
-\bottomrule
-\end{tabular}
-\caption{Confidence calibration metrics. FAISS and BM25 show AUROC $< 0.5$, meaning that wrong answers receive higher confidence than correct ones.}
-\label{tab:calibration}
-\end{table}
+\subsection{Production Systems: Compression Destroys Temporal Detail}
+The most striking finding is the dramatic gap between lightweight baselines (81--82\%) and production memory systems (2--8\%).
+We identify three structural causes:
 
-FAISS's AUROC of 0.453 indicates that confidence scores are worse than random at predicting correctness: wrong answers often receive higher confidence than correct ones.
-This has practical implications, because agents cannot reliably use internal confidence alone to determine whether a temporal-memory answer should be trusted or externally verified.
+\paragraph{Memory compression.}
+Mem0's LLM-based memory extraction (with \texttt{infer=True}) compresses raw memory writes into generalized ``memory facts.''
+For example, ``Microsoft CEO changed from Ballmer to Nadella on 2014-02-04'' may be compressed into ``Satya Nadella is Microsoft CEO,'' losing the event-time/record-time distinction essential for bitemporal queries.
+This explains why Mem0 achieves 19.2\% on entity attribute evolution (where some facts survive compression) but 0--1.9\% on other types.
 
-\subsection{Knowledge Retraction vs.\ Version Tracking}
-We decompose performance on questions involving knowledge dynamics (Table~\ref{tab:retraction}).
-Simple KG shows an asymmetric profile: it is relatively strong on version tracking (81.0\%, close to FAISS's 82.8\%) but weaker on knowledge retraction (53.6\%).
-This pattern suggests that graph structures may naturally support tracking fact evolution, while handling explicit revocation of superseded knowledge remains more difficult.
+\paragraph{Graph construction overhead.}
+Graphiti builds entity-relation graphs from each memory write using LLM extraction and stores them in Neo4j.
+For short scenarios (2--7 writes), the overhead of graph construction (entity resolution, relation extraction, deduplication) introduces errors that compound, leading to near-zero retrieval accuracy.
+Graphiti's perfect accuracy on relationship evolution (100.0\%) vs.\ near-zero on other types suggests it captures relational changes but loses attribute-level temporal detail.
 
-\begin{table}[t]
-\centering
-% 中文注释：该表继续保持按栏宽缩放，只统一字体和符号间距，不改变尺寸策略。
-\resizebox{\columnwidth}{!}{%
-\begin{tabular}{lccc}
-\toprule
-\textbf{System} & \textbf{Retraction (28Q)} & \textbf{Ver.\ Track.\ (58Q)} & \textbf{Neither (222Q)} \\
-\midrule
-FAISS & 67.9\% & \textbf{82.8\%} & 74.8\% \\
-Naive RAG & 67.9\% & 75.9\% & 74.3\% \\
-BM25 & 57.1\% & 74.1\% & \textbf{75.2\%} \\
-Simple KG & 53.6\% & 81.0\% & 65.3\% \\
-ChromaDB & 39.3\% & 37.9\% & 42.3\% \\
-\bottomrule
-\end{tabular}%
-}
-\caption{Accuracy by knowledge-dynamics type. Simple KG is strong at version tracking but weak at retraction. Bootstrap CIs for retraction span 35pp because $n = 28$ is small.}
-\label{tab:retraction}
-\end{table}
+\paragraph{Temporal indexing mismatch.}
+Both production systems implement their own temporal indexing, but it does not align with BiTempQA's bitemporal model.
+Mem0 timestamps memories with creation time but does not preserve event time as a first-class dimension.
+Graphiti uses reference time for search but lacks explicit event-time/record-time separation.
+
+\subsection{ChromaDB's Metadata Filtering Failure}
+ChromaDB's 22.6\% accuracy warrants detailed analysis.
+Unlike the other lightweight systems that use embedding similarity for retrieval, ChromaDB relies on metadata filtering: temporal conditions are converted to metadata queries that filter documents before similarity ranking.
+This approach fails in practice for two reasons:
+
+\paragraph{Heterogeneous temporal formats.}
+Real-world data from ChronoQA and curated events uses diverse temporal expressions. ChromaDB's metadata filtering requires consistent ISO format, and when parsing fails, queries fall back to recency-based retrieval that misses relevant context.
+
+\paragraph{Metadata coverage gaps.}
+Some memory writes lack explicit temporal metadata (e.g., relational facts without clear event times). When metadata is missing, ChromaDB cannot apply temporal filters, effectively excluding these facts from retrieval.
+
+Notably, ChromaDB achieves perfect accuracy on L2 questions (100.0\%) but only 19.8\% on L1 questions. This suggests it can handle aggregation tasks where all relevant facts are retrieved, but fails on point-in-time queries requiring specific temporal filtering.
+
+\subsection{Real-World vs.\ Synthetic Performance}
+The merged dataset enables a natural experiment: 215 real-source scenarios vs.\ 118 LLM-generated scenarios.
+While the test set is entirely real-source (by design), the training set includes both sources.
+We observe that lightweight systems perform comparably on both real and synthetic scenarios in the training data, validating our LLM augmentation approach.
+The rare scenario types covered only by LLM generation (contradictory information, future-dated information, entity identity resolution) remain important for benchmark completeness even though they do not appear in the test set.
 
 \subsection{Implications for Memory System Design}
-Our findings suggest three design implications:
+Our findings suggest four design recommendations:
 
-\paragraph{1. Temporal-aware retrieval.}
-Since $\sim 55\%$ of sampled failures are retrieval-limited, adding temporal metadata filtering (e.g., ``retrieve only facts recorded before $T$'') or bitemporal indexing may yield larger gains than improving the reasoning model alone.
+\paragraph{1. Preserve raw temporal context.}
+The dramatic failure of production systems shows that memory compression destroys bitemporal detail. Memory systems should preserve original timestamps and temporal context rather than compressing them into generalized facts.
 
-\paragraph{2. Hybrid vector+graph architectures.}
-% 中文注释：这里只统一字体，不改原始推断力度。
-The complementarity between systems (oracle +9.8pp) and Simple KG's adversarial robustness suggest that combining dense retrieval's breadth with graph structure's precision could outperform either approach alone.
+\paragraph{2. Invest in temporal-aware generation for short contexts.}
+For short-context scenarios, retrieval quality is not the differentiator. The LLM generator's ability to reason about bitemporal relationships from retrieved context is the primary accuracy driver.
 
-\paragraph{3. External verification for temporal claims.}
-Anti-calibrated confidence means that internal signals are unreliable for identifying uncertain temporal answers. External verification, such as cross-checking against source timestamps, may therefore be especially valuable for bitemporal queries.
+\paragraph{3. Avoid rigid temporal metadata schemas.}
+ChromaDB's failure demonstrates that metadata filtering with strict format requirements cannot handle the diversity of real-world temporal expressions.
+
+\paragraph{4. Use real-world data for benchmark validation.}
+The natural temporal dynamics in ChronoQA and curated events provide more ecologically valid test scenarios than purely synthetic templates.

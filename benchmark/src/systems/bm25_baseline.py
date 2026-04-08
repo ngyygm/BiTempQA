@@ -12,6 +12,13 @@ from .base import MemorySystem, QueryResult
 
 logger = logging.getLogger(__name__)
 
+try:
+    import jieba
+    _JIEBA_AVAILABLE = True
+except ImportError:
+    _JIEBA_AVAILABLE = False
+    logger.warning("jieba not installed, falling back to character-level tokenization")
+
 
 class BM25Baseline(MemorySystem):
     """BM25 retrieval baseline using jieba tokenization for Chinese text."""
@@ -25,22 +32,20 @@ class BM25Baseline(MemorySystem):
 
     @staticmethod
     def _tokenize(text: str) -> List[str]:
-        """Simple character-level tokenization for Chinese text.
-
-        Falls back to whitespace splitting for non-CJK text.
-        For a production system, use jieba or similar tokenizer.
-        """
-        # Check if text contains CJK characters
+        """Tokenize text using jieba for Chinese, whitespace for non-CJK."""
         has_cjk = any('\u4e00' <= ch <= '\u9fff' for ch in text)
         if has_cjk:
-            # Character-level tokenization + bigrams for Chinese
-            chars = list(text)
-            bigrams = [text[i:i+2] for i in range(len(text) - 1)]
-            return chars + bigrams
+            if _JIEBA_AVAILABLE:
+                return list(jieba.cut(text))
+            else:
+                # Fallback: character-level + bigrams
+                chars = list(text)
+                bigrams = [text[i:i+2] for i in range(len(text) - 1)]
+                return chars + bigrams
         else:
             return text.split()
 
-    def remember(self, text: str, event_time: str, source_name: str = "scenario_trace") -> str:
+    def remember(self, text: str, event_time: str, record_time: Optional[str] = None, source_name: str = "scenario_trace") -> str:
         self.raw_texts.append(text)
         self.tokenized_texts.append(self._tokenize(text))
         # Rebuild BM25 index (rank_bm25 doesn't support incremental updates)

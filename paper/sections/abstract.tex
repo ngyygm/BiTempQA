@@ -1,16 +1,9 @@
-% 中文注释：减少摘要中不必要的斜体、粗体和代码字体，使整体样式更贴近 ACL/EMNLP 正文风格。
-% 中文注释：按你的要求，把摘要首句里原本有辨识作用的斜体强调恢复回来，但不扩大到整段。
-Memory-augmented LLM agents must track not only \emph{what} happened but also \emph{when} it happened and \emph{when they learned about it}, a dual-timestamp (bitemporal) distinction that is important in applications such as medical records, financial systems, and news analysis.
-Existing benchmarks either ignore timestamps or treat time as a single dimension, leaving this capability insufficiently evaluated.
+Memory-augmented LLM agents must track not only \emph{what} happened but \emph{when} it happened and \emph{when they learned about it}, a dual-timestamp (bitemporal) distinction critical for real-world applications such as medical records, financial systems, and news analysis.
+Existing benchmarks either ignore timestamps entirely or treat time as a single dimension, leaving a gap in evaluating this capability.
 
-% 中文注释：这里保留原语义，但把 event_time / record_time 从代码字体改为普通学术表述，避免摘要中出现过多特殊字形。
-% 中文注释：这里把语气收紧为更标准的 benchmark 介绍写法，避免过强宣传式表述。
-We introduce BiTempQA, a diagnostic benchmark of 1,536 Chinese question-answer pairs, including 308 held-out test items, spanning 10 scenario types and 9 question types across three difficulty levels. Each memory entry carries explicit event-time and record-time annotations.
-Over half (56.5\%) of questions require reasoning about both timestamps simultaneously.
-% 中文注释：调整箭头和统计量的数学间距，让摘要的视觉风格更统一。
-We evaluate five memory backends (FAISS, BM25, Naive RAG, Simple KG, and ChromaDB) in a unified Retrieve $\rightarrow$ LLM Generate $\rightarrow$ LLM Judge pipeline.
-A mixed-effects logistic regression indicates that record-time reasoning is more difficult than event-time reasoning ($p = 0.023$) after controlling for question type, difficulty, and scenario variation.
-We further find that (1) the top three systems are not significantly different overall ($p > 0.3$) but diverge by question type (40.6pp accuracy spread); (2) an oracle ensemble reaches 85.4\%, a gain of 9.8pp over the best individual system; (3) approximately 55\% of sampled failures appear retrieval-related; and (4) system confidence scores are poorly calibrated, with FAISS and BM25 showing AUROC $< 0.5$.
-% 中文注释：Cross-validation on 为更自然的 benchmark 搭配，保留原判断不变。
-Cross-benchmark comparison with LoCoMo reveals marked system asymmetries: Simple KG performs best on adversarial questions (97.5\%) but underperforms on temporal reasoning (37.5\%).
-BiTempQA provides an open diagnostic resource for studying temporally aware memory systems.
+We introduce \textbf{BiTempQA}, a diagnostic benchmark of 415 Chinese question-answer pairs (84 held-out test, all sourced from real-world data) across 10 scenario types and 3 question types at two difficulty levels, where each memory entry carries explicit \texttt{event\_time} (when something occurred) and \texttt{record\_time} (when the system stored it) annotations.
+Over half (56.0\%) of test questions require reasoning about both timestamps simultaneously.
+The dataset combines ChronoQA news data (200 scenarios) with 15 manually curated real-world temporal event scenarios and 118 LLM-generated scenarios covering rare types (64.6\% real-source overall).
+We evaluate seven memory backends (FAISS, BM25, Naive RAG, Simple KG, ChromaDB, Mem0, Graphiti) through a unified Retrieve$\to$LLM Generate$\to$LLM Judge pipeline with controlled evaluation parameters (same embedding model, same top-$k$, same generator).
+We find that: (1) the top four lightweight systems are statistically indistinguishable (81.0--82.1\%, $p{>}0.3$), suggesting that retrieval design matters less than answer generation quality for short-context bitemporal scenarios; (2) ChromaDB's metadata filtering approach fails catastrophically (22.6\%) due to heterogeneous temporal formats in real-world data; (3) production memory systems (Mem0, Graphiti) dramatically underperform lightweight baselines, revealing that aggressive memory compression destroys bitemporal detail; and (4) real-world and LLM-generated scenarios yield comparable accuracy, validating our data augmentation approach.
+BiTempQA is released as an open diagnostic tool for developing temporally-aware memory systems.

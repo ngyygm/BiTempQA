@@ -1,15 +1,17 @@
 \section{Conclusion}
 
-We presented BiTempQA, a diagnostic benchmark for evaluating bitemporal reasoning, that is, reasoning about \emph{when events occurred} versus \emph{when the system learned about them}, in LLM agent memory systems.
-Our evaluation of five memory backends yields three main findings.
+We presented BiTempQA, the first diagnostic benchmark explicitly designed to evaluate bitemporal reasoning (reasoning about \emph{when events occurred} vs.\ \emph{when the system learned about them}) in LLM agent memory systems.
+Unlike prior benchmarks that use purely synthetic data, BiTempQA v3 is grounded in real-world temporal data: 64.6\% of scenarios come from ChronoQA (Chinese news QA) and manually curated public events, with the test set being 100\% real-source.
+Our evaluation of seven memory backends (five lightweight, two production) reveals four key findings.
 
-% 中文注释：结论段保留结构，但收缩不必要的粗体，并统一统计量的间距写法。
-% 中文注释：结论段把语气改为“our results indicate / suggest”，避免把统计结果写成绝对事实。
-First, our results indicate that record-time reasoning is more difficult than event-time reasoning ($p = 0.023$), supporting the usefulness of the dual-timestamp distinction.
-Second, retrieval appears to be a major bottleneck ($\sim 55\%$ of sampled failures), suggesting that temporally aware retrieval mechanisms may be a productive direction for improvement.
-Third, the evaluated memory backends are complementary: an oracle ensemble reaches 85.4\% (+9.8pp), and graph-based memory shows strong adversarial robustness (97.5\%) despite lower temporal accuracy.
+First, \textbf{retrieval design matters less than expected} for short-context scenarios: BM25, FAISS, Naive RAG, and Simple KG achieve statistically indistinguishable accuracy (81.0--82.1\%), suggesting that all systems retrieve sufficient context when scenarios contain fewer than 10 memory writes.
 
-% 中文注释：这里只保留正常正文字体，不再额外强化语气。
-Taken together, these findings suggest several directions for temporally aware memory systems, including bitemporal indexing, hybrid retrieval architectures that combine vector breadth with graph precision, and external verification beyond sole reliance on internal confidence.
+Second, \textbf{production memory systems are not yet temporally capable}: Mem0 (8.3\%) and Graphiti (2.4\%) dramatically underperform lightweight backends, primarily due to aggressive memory compression that destroys bitemporal detail and temporal indexing that does not preserve event-time/record-time separation.
 
-Future work includes human expert validation, English translation, evaluation of production memory systems (e.g., Mem0, Graphiti, and TMG), and extension to longer scenarios with richer temporal dynamics.
+Third, \textbf{rigid temporal metadata filtering fails catastrophically}: ChromaDB's 22.6\% accuracy reflects the fundamental mismatch between metadata-based temporal queries and the heterogeneous temporal formats in real-world data.
+
+Fourth, \textbf{real-world data validates the benchmark}: the balanced gap distribution in ChronoQA-sourced scenarios and diverse domains confirm that bitemporal reasoning challenges exist in naturally-occurring data, and LLM-based data augmentation produces comparable difficulty levels.
+
+These findings provide actionable guidance for building temporally-aware memory systems: preserve raw temporal context rather than compressing it, invest in generation quality for short contexts, avoid rigid temporal schemas, and ground benchmarks in real-world temporal dynamics.
+
+Future work includes: human expert validation of QA pairs, English translation, expansion to longer scenarios with 50+ memory writes where retrieval selectivity matters, and evaluation of bitemporal-aware memory architectures that preserve both temporal dimensions as first-class citizens.

@@ -25,8 +25,20 @@ class MemorySystem(ABC):
         self.name = name
 
     @abstractmethod
-    def remember(self, text: str, event_time: str, source_name: str = "scenario_trace") -> str:
-        """Store a memory with event_time.
+    def remember(
+        self,
+        text: str,
+        event_time: str,
+        record_time: Optional[str] = None,
+        source_name: str = "scenario_trace",
+    ) -> str:
+        """Store a memory with event_time and record_time.
+
+        Args:
+            text: The natural language content to remember.
+            event_time: When the described event occurred (valid time).
+            record_time: When the system recorded this fact (transaction time).
+            source_name: Provenance tag for the memory.
 
         Returns a write_id or task identifier.
         """
@@ -67,5 +79,6 @@ class MemorySystem(ABC):
             self.remember(
                 text=write.text,
                 event_time=write.event_time,
+                record_time=write.record_time,
                 source_name=write.source_name,
             )

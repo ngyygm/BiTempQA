@@ -19,7 +19,7 @@ class NaiveRAGBaseline(MemorySystem):
         self.texts: List[str] = []
         self.top_k: int = 5
 
-    def remember(self, text: str, event_time: str, source_name: str = "scenario_trace") -> str:
+    def remember(self, text: str, event_time: str, record_time: Optional[str] = None, source_name: str = "scenario_trace") -> str:
         self.texts.append(text)
         return f"naive_{len(self.texts)}"
 

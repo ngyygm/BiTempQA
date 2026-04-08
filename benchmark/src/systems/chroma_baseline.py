@@ -34,20 +34,25 @@ class ChromaBaseline(MemorySystem):
         )
         self._all_docs: List[str] = []
 
-    def remember(self, text: str, event_time: str, source_name: str = "scenario_trace") -> str:
+    def remember(self, text: str, event_time: str, record_time: Optional[str] = None, source_name: str = "scenario_trace") -> str:
         write_id = f"chroma_{self.collection.count()}"
         emb = self.encoder.encode([text]).tolist()
-        # Store event_time as ISO string AND as numeric timestamp for filtering
-        ts = self._iso_to_timestamp(event_time)
+        # Store event_time and record_time as ISO strings and numeric timestamps for filtering
+        event_ts = self._iso_to_timestamp(event_time)
+        record_ts = self._iso_to_timestamp(record_time) if record_time else event_ts
+        metadata = {
+            "event_time": event_time,
+            "event_ts": event_ts,
+            "source": source_name,
+        }
+        if record_time:
+            metadata["record_time"] = record_time
+            metadata["record_ts"] = record_ts
         self.collection.add(
             ids=[write_id],
             documents=[text],
             embeddings=emb,
-            metadatas=[{
-                "event_time": event_time,
-                "event_ts": ts,
-                "source": source_name,
-            }],
+            metadatas=[metadata],
         )
         self._all_docs.append(text)
         return write_id
